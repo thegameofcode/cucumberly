@@ -22,30 +22,23 @@ require('./schemas');
 require('./routes')(server);
 
 module.exports = {
-    start: (mongourl,port, callback) => {
-        log.info( 'starting', config.APP_NAME, mongourl,port );
+    start: (mongourl, port, callback) => {
+        log.info('starting', config.APP_NAME, mongourl, port);
         async.series(
             [
-                (next) => {
-                    mongoose.connect(mongourl, (err) => {
+                    next => {
+                    mongoose.connect(mongourl, err => {
                         const db = mongoose.connection;
-                        db.on('error', (err) => {
-                            log.error('mongoose err', err);
-                        });
-                        db.once('open', () => {
-                            log.info('mongoose ok');
-                        });
+                        db.on('error', err => log.error('mongoose err', err));
+                        db.once('open', () => log.info('mongoose ok'));
 
-                        if(err){
-                            log.error(err);
-                        }
-                        else {
-                            log.warn('MongoDB connected to ' + mongourl);
-                        }
+                        if (err) log.error(err);
+                        else log.warn('MongoDB connected to ' + mongourl);
+
                         next();
                     });
                 },
-                (next) => {
+                    next => {
                     server.listen(port, () => {
                         log.warn('port', port);
                         log.warn('%s listening at %s', server.name, server.url);
@@ -53,14 +46,10 @@ module.exports = {
                     });
                 }
             ],
-            () => {
-                callback();
-            }
+            () => callback()
         );
     },
-    stop: (callback) =>{
-        server.close(() => {
-            mongoose.disconnect(callback);
-        });
+    stop: (callback) => {
+        server.close(() => mongoose.disconnect(callback));
     }
 };

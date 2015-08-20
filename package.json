@@ -5,6 +5,7 @@
   "main": "./src/start.js",
   "scripts": {
     "start": "node --harmony ./src/start.js",
+    "backdoor": "node --harmony ./src/test_backdoor/start.js",
     "jshint": "node --harmony node_modules/.bin/jshint ./src ./test ./features",
     "test": "node --harmony node_modules/.bin/mocha ./test/**",
     "acceptance": "node --harmony node_modules/.bin/cucumber.js -r ./features/cuke_generator/step_definitions --tags ~@skip --format pretty",
