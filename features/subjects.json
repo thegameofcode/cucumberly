@@ -1,0 +1,13 @@
+{
+  "CUKE_GENERATOR" : {
+    "scenario_default" : {
+      "episode" : "EP1 Cuke generator testing",
+      "subject" : "$CUKE_GENERATOR",
+      "description" : "I will test if this data is correct",
+      "title" : "My scenario title",
+      "given" : ["I had a first given","I had a second given"],
+      "when" : ["I had a first when","I had a second when"],
+      "then" : ["I had a first then","I had a second then"]
+    }
+  }
+}
