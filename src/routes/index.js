@@ -3,8 +3,8 @@
 module.exports = (server) => {
 
     server.get('/api/ping',
-        (req,res,next) => {
-            res.send(200,{pong:true});
+        (req, res, next) => {
+            res.send(200, {pong: true});
             next();
         });
 

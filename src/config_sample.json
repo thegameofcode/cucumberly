@@ -1,0 +1,6 @@
+{
+  "APP_NAME": "cucumberly",
+  "PORT": "4000",
+  "PORT_TEST": "4001",
+  "MONGO_URL": "mongodb://127.0.0.1:27017/cucumberly?w=1"
+}
