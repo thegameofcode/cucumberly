@@ -3,6 +3,7 @@
 const async = require('async');
 const mongoose = require('mongoose');
 const restify = require('restify');
+const registerServices = require('./registerServices');
 
 const config = require('./config');
 const log = require('./log.js');
@@ -20,6 +21,7 @@ server.get(/\/html\/?.*/,
 
 require('./schemas');
 require('./routes')(server);
+registerServices(server);
 
 module.exports = {
     start: (mongourl, port, callback) => {

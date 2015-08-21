@@ -1,5 +1,5 @@
 const should = require('chai').should();
-const $ = require(process.cwd()+'/features/subjects.json');
+const $ = require(process.cwd()+'/acceptance/features/subjects.json');
 
 
 module.exports = () => {
