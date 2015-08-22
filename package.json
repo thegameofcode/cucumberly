@@ -8,7 +8,7 @@
     "backdoor": "node --harmony ./src/test_backdoor/start.js",
     "jshint": "node --harmony node_modules/.bin/jshint ./src ./test ./features",
     "test": "node node_modules/.bin/mocha --harmony ./test/**",
-    "acceptance": "node --harmony node_modules/.bin/cucumber.js acceptance/features -r ./acceptance/step_definitions --tags @now --format pretty",
+    "acceptance": "node --harmony node_modules/.bin/cucumber.js acceptance/features -r ./acceptance/step_definitions --tags ~@pending --format pretty",
     "coverage": "node --harmony node_modules/.bin/istambul.js ./test/** ./features/**"
   },
   "repository": {

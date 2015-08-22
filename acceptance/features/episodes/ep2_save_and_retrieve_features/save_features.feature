@@ -3,7 +3,6 @@ Feature: Save features
   As a $FRONT_END_APP
   I want to be able to save the changes I make
 
-  @now
   Scenario: Save a new feature
     Given $FRONT_END_APP has created the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |
