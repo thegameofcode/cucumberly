@@ -12,9 +12,10 @@ module.exports = () => {
             method: 'POST',
             json: true,
             body: assembleBody(world.newFeature)
-        }, (err, response) => {
+        }, (err, response, body) => {
             should.not.exist(err, err);
 
+            world.lastResponseBody = body;
             world.lastResponseStatusCode = response.statusCode;
             done();
         });

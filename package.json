@@ -8,7 +8,7 @@
     "backdoor": "node --harmony ./src/test_backdoor/start.js",
     "jshint": "node --harmony node_modules/.bin/jshint ./src ./test ./features",
     "test": "node node_modules/.bin/mocha --harmony ./test/**",
-    "acceptance": "node --harmony node_modules/.bin/cucumber.js acceptance/features -r ./acceptance/step_definitions --tags ~@pending --format pretty",
+    "acceptance": "node --harmony node_modules/.bin/cucumber.js acceptance/features -r ./acceptance/step_definitions --tags @now --format pretty",
     "coverage": "node --harmony node_modules/.bin/istambul.js ./test/** ./features/**"
   },
   "repository": {
@@ -23,7 +23,9 @@
     "cucumber": "^0.5.2",
     "istanbul": "^0.3.18",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "mockery": "^1.4.0",
+    "sinon": "^1.16.1"
   },
   "dependencies": {
     "async": "^1.4.2",
