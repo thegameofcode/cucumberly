@@ -4,9 +4,9 @@ machine:
 test:
   pre:
     - npm start:
-      background: true
+        background: true
     - npm run backdoor:
-      background: true
+        background: true
   override:
     - npm test
     - npm run acceptance
