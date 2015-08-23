@@ -1,7 +1,5 @@
 'use strict';
 
-const service = require('../service_test.js');
-
 module.exports = () => {
 
     this.registerHandler('BeforeFeatures',

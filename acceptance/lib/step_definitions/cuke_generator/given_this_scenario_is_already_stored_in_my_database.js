@@ -1,7 +1,7 @@
 'use strict';
 
 const request = require('request'),
-    config = require('../../../src/config.js'),
+    config = require('../../../../src/config.js'),
     should = require('chai').should();
 
 module.exports = ()=> {

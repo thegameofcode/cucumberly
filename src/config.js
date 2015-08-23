@@ -12,6 +12,7 @@ module.exports = {
     BACKDOOR_URL: 'http://localhost:' + config.BACKDOOR_PORT + '/backdoor',
 
     MONGO_URL: process.env.IGZ006_MONGO_URL || config.MONGO_URL,
+    DB_COLLECTION_NAME: 'cucumberly',
 
     LOG_LEVEL: process.env.IGZ006_LOG_LEVEL || 'INFO'
 };

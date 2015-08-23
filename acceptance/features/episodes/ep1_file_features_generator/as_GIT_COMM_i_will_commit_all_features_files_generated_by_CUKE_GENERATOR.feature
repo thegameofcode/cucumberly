@@ -3,6 +3,7 @@ Feature: EP1 File features generator
   I will retrieve data about a book of features stored in a database
   In order to convert this data into cucumber files
 
+  @pending
   Scenario: $CUKE_GENERATOR retrieves data of a concrete scenario and convert it into file.feature
     Given $CUKE_GENERATOR already has a concrete scenario defined
     And this scenario is already stored in my database

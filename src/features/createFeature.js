@@ -1,10 +1,14 @@
 'use strict';
 
-const generateId = require('../idsGenerator/generateId.js');
+const generateId = require('../idsGenerator/generateId.js'),
+    persistOnStorage = require('../storage/persistOnStorage.js');
 
 module.exports = (request, response, next) => {
-    response.json(201, assembleBody());
-    return next();
+    persistOnStorage(request.body).then(() => {
+
+        response.json(201, assembleBody());
+        return next();
+    });
 };
 
 function assembleBody(){
