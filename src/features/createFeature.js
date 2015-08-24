@@ -4,14 +4,15 @@ const generateId = require('../idsGenerator/generateId.js'),
     persistOnStorage = require('../storage/persistOnStorage.js');
 
 module.exports = (request, response, next) => {
-    persistOnStorage(request.body).then(() => {
+    if (request.body.name === undefined) {response.json(409, {error: 'missing name'}); return next()}
 
-        response.json(201, assembleBody());
+    persistOnStorage(request.body).then(() => {
+        response.json(201, assembleResponseBody());
         return next();
     });
 };
 
-function assembleBody(){
+function assembleResponseBody(){
     return {
         id: generateId()
     }
