@@ -7,5 +7,4 @@ npm-debug.log
 coverage
 config.json
 tests.cucumber
-test
 src/config.json
