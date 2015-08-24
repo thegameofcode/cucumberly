@@ -2,6 +2,7 @@
 
 const sinon = require('sinon'),
     q = require('q'),
+    _ = require('lodash'),
     mockery = require('mockery'),
     should = require('chai').should();
 
@@ -64,7 +65,7 @@ describe('Create feature', () => {
         }
     });
 
-    it('Should store the features', done => {
+    it('Should store the features data and id', done => {
         const responseStub = createResponseStub();
 
         let deferred = q.defer();
@@ -72,7 +73,7 @@ describe('Create feature', () => {
 
         let persistOnStorageStub = sinon.stub();
         persistOnStorageStub.returns(promise);
-        const createFeature = getCreateFeatureInstance(sinon.stub(), persistOnStorageStub);
+        const createFeature = getCreateFeatureInstance(idsGeneratorStub, persistOnStorageStub);
 
         const mockedRequest = mockRequest();
         createFeature(mockedRequest, responseStub, checkResponse);
@@ -80,7 +81,11 @@ describe('Create feature', () => {
         deferred.resolve();
         function checkResponse() {
             persistOnStorageStub.calledOnce.should.equal(true);
-            persistOnStorageStub.args[0][0].should.deep.equal(mockedRequest.body);
+
+            const elementsToPersist = persistOnStorageStub.args[0][0];
+            const expectedPersistedElements = _.assign(mockedRequest.body, {id: idsGeneratorStub()});
+
+            elementsToPersist.should.deep.equal(expectedPersistedElements);
             done();
         }
     });

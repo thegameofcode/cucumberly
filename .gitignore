@@ -1,10 +1,7 @@
 .idea
-/local/.vagrant
 
 .DS_Store
 node_modules
 npm-debug.log
 coverage
-config.json
-tests.cucumber
 src/config.json

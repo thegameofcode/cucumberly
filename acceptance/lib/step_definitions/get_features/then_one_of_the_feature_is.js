@@ -20,6 +20,7 @@ module.exports = () => {
         let foundFeature = false;
         obtainedBody.forEach(obtainedFeature => {
             delete obtainedFeature['_id'];
+			delete obtainedFeature['id'];
 
             if (_.isEqual(expectedFeatureData, obtainedFeature)) foundFeature = true;
         });
