@@ -3,7 +3,7 @@ Feature: Save features
   As a $FRONT_END_APP
   I want to be able to modify it
 
-  Scenario: Retrieve a saved feature
+  Scenario: Modify an existing feature
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |
       | Addition | math idiot  | avoid silly mistakes | to be told the sum of two numbers |
