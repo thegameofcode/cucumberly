@@ -16,7 +16,7 @@ describe('Create feature', () => {
         let persistOnStorageStub = sinon.stub();
         persistOnStorageStub.returns(promise);
 
-        const createFeature = getCreateFeatureInstance(idsGeneratorStub, persistOnStorageStub);
+        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistOnStorageStub);
 
         deferred.resolve();
         createFeature(mockRequest(), createResponseStub(), done);
@@ -31,7 +31,7 @@ describe('Create feature', () => {
         let persistOnStorageStub = sinon.stub();
         persistOnStorageStub.returns(promise);
 
-        const createFeature = getCreateFeatureInstance(idsGeneratorStub, persistOnStorageStub);
+        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistOnStorageStub);
         createFeature(mockRequest(), responseStub, checkResponse);
 
         deferred.resolve();
@@ -53,7 +53,7 @@ describe('Create feature', () => {
         const idsGeneratorStub = sinon.stub();
         idsGeneratorStub.returns('abc123');
 
-        const createFeature = getCreateFeatureInstance(idsGeneratorStub, persistOnStorageStub);
+        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistOnStorageStub);
         createFeature(mockRequest(), responseStub, checkResponse);
 
         deferred.resolve();
@@ -66,17 +66,15 @@ describe('Create feature', () => {
     });
 
     it('Should store the features data and id', done => {
-        const responseStub = createResponseStub();
-
         let deferred = q.defer();
         let promise = deferred.promise;
 
         let persistOnStorageStub = sinon.stub();
         persistOnStorageStub.returns(promise);
-        const createFeature = getCreateFeatureInstance(idsGeneratorStub, persistOnStorageStub);
+        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistOnStorageStub);
 
         const mockedRequest = mockRequest();
-        createFeature(mockedRequest, responseStub, checkResponse);
+        createFeature(mockedRequest, createResponseStub(), checkResponse);
 
         deferred.resolve();
         function checkResponse() {
@@ -94,7 +92,7 @@ describe('Create feature', () => {
         const responseStub = createResponseStub();
         const responseSpy = sinon.spy(responseStub, 'json');
 
-        const createFeature = getCreateFeatureInstance(sinon.stub(), sinon.stub());
+        const createFeature = getCreateFeatureMiddleware(sinon.stub(), sinon.stub());
         let mockedRequest = mockRequest();
         delete mockedRequest.body.name;
         createFeature(mockedRequest, responseStub, checkResponse);
@@ -113,7 +111,7 @@ describe('Create feature', () => {
     });
 });
 
-function getCreateFeatureInstance(idsMock, persistOnStorageStub) {
+function getCreateFeatureMiddleware(idsMock, persistOnStorageStub) {
     mockery.registerMock('../idsGenerator/generateId.js', idsMock);
     mockery.registerMock('../storage/persistOnStorage.js', persistOnStorageStub);
 
