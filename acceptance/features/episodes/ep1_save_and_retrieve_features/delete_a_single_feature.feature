@@ -1,4 +1,4 @@
-Feature: Delete features
+Feature: Delete a single feature
   In order to clean up my work space
   As a $FRONT_END_APP
   I want to be able to delete my features
