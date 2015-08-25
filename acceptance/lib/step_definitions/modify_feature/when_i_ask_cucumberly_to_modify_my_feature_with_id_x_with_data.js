@@ -11,7 +11,7 @@ module.exports = () => {
 		const featureId = world[idAlias];
 
 		request({
-			uri: config.APP_URL + '/api/features/' + featureId,
+			uri: config.app.url + '/api/features/' + featureId,
 			method: 'PUT',
 			json: true,
 			body: featureModificationsTable.hashes()[0]

@@ -25,7 +25,7 @@ registerServices(server);
 
 module.exports = {
     start: (mongourl, port, callback) => {
-        log.info('starting', config.APP_NAME, mongourl, port);
+        log.info('starting', config.app.name, mongourl, port);
         async.series(
             [
                     next => {

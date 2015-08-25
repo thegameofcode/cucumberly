@@ -7,7 +7,7 @@ const request = require('request'),
 module.exports = ()=> {
     this.Given(/^this scenario is already stored in my database$/, callback => {
         request({
-            uri: config.BACKDOOR_URL + '/save-scenario',
+            uri: config.backdoor.url + '/save-scenario',
             method: 'POST',
             json: true,
             body: this.world.cukeGeneratorDefaultScenario

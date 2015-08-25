@@ -1,4 +1,4 @@
-Feature: Save features
+Feature: Retrieve features
   In order to resume my work
   As a $FRONT_END_APP
   I want to be able to retrieve my saved features

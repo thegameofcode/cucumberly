@@ -46,8 +46,8 @@ describe('Persist on storage', () => {
         const dataToPersist = {some: 'data'};
 
         return persistOnStorage(dataToPersist).then(() => {
-            dbConnectedToUrl.should.equal(config.MONGO_URL);
-            usedCollectionName.should.equal(config.DB_COLLECTION_NAME);
+            dbConnectedToUrl.should.equal(config.database.url);
+            usedCollectionName.should.equal(config.database.collectionName);
             dataSentToPersist.should.deep.equal(dataToPersist);
         });
     });

@@ -3,8 +3,8 @@
 const config = require('./config.js');
 const bunyan = require('bunyan');
 module.exports = bunyan.createLogger({
-    name: config.APP_NAME,
+    name: config.app.name,
     stream: process.stdout,
-    level: config.LOG_LEVEL || 'INFO',
+    level: config.logLevel || 'INFO',
     formatter: 'pretty'
 });

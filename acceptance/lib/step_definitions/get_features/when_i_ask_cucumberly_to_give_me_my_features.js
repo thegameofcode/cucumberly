@@ -10,7 +10,7 @@ module.exports = () => {
         const world = this.world;
 
         request({
-            uri: config.APP_URL + '/api/features',
+            uri: config.app.url + '/api/features',
             method: 'GET',
             json: true
         }, (err, response, body) => {

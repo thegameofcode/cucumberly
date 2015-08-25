@@ -3,7 +3,7 @@
 const mongoClient = require('mongodb').MongoClient,
     config = require('../config.js');
 
-const url = config.MONGO_URL;
+const url = config.database.url;
 
 module.exports = filter => {
     return new Promise((resolve, reject) => {
@@ -13,7 +13,7 @@ module.exports = filter => {
                 return reject(Error(err));
             }
 
-            const collection = db.collection(config.DB_COLLECTION_NAME);
+            const collection = db.collection(config.database.collectionName);
 
             collection.find(filter).toArray((err, retrievedDocs) => {
                 if (err !== null) {

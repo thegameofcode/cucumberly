@@ -7,7 +7,7 @@ const request = require('request'),
 
 module.exports = (world, featureData, callback) => {
     request({
-        uri: config.APP_URL + '/api/features',
+        uri: config.app.url + '/api/features',
         method: 'POST',
         json: true,
         body: assembleBody(featureData)

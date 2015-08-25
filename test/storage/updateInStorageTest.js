@@ -47,7 +47,7 @@ describe('Update in storage', () => {
 		const dataToUpdate = {a: 1, b: 2};
 
 		return updateInStorage(documentID, dataToUpdate).then(() => {
-			usedCollectionName.should.equal(config.DB_COLLECTION_NAME);
+			usedCollectionName.should.equal(config.database.collectionName);
 			usedElementToUpdate.should.deep.equal({id: documentID});
 			usedFieldsToUpdate.should.deep.equal({$set: dataToUpdate});
 		});

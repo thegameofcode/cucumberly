@@ -6,7 +6,7 @@ const request = require('request'),
 
 module.exports = (world, scenarioData, featureId, callback) => {
 	request({
-		uri: config.APP_URL + '/api/features/' + featureId + '/scenarios',
+		uri: config.app.url + '/api/features/' + featureId + '/scenarios',
 		method: 'POST',
 		json: true,
 		body: assembleBody(scenarioData)

@@ -3,14 +3,14 @@
 const mongoClient = require('mongodb').MongoClient,
     config = require('../config.js');
 
-const url = config.MONGO_URL;
+const url = config.database.url;
 
 module.exports = dataToPersist => {
     return new Promise((resolve, reject) => {
 
         mongoClient.connect(url, (err, db) => {
 
-            const collection = db.collection(config.DB_COLLECTION_NAME);
+            const collection = db.collection(config.database.collectionName);
 
             collection.insertOne(dataToPersist, err => {
                 if (err !== null) {

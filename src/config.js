@@ -1,18 +1,22 @@
 'use strict';
 
 const fs = require('fs');
-const config = fs.existsSync(process.cwd() + '/src/config.json') ? require('./config.json') : {};
+const configJson = fs.existsSync(process.cwd() + '/src/config.json') ? require('./config.json') : {};
 
 module.exports = {
-    APP_NAME: process.env.IGZ006_APP_NAME || config.APP_NAME,
-    PORT: process.env.IGZ006_PORT || process.env.PORT || config.PORT,
-    APP_URL: 'http://localhost:4000',
+    app: {
+		name: process.env.IGZ006_APP_NAME || configJson.app.name,
+		port: process.env.IGZ006_PORT || process.env.PORT || configJson.app.port,
+		url: 'http://localhost:4000'
+	},
+	backdoor: {
+		port: configJson.backdoor.port,
+		url: 'http://localhost:' + configJson.backdoor.url + '/backdoor'
+	},
 
-    BACKDOOR_PORT: config.BACKDOOR_PORT,
-    BACKDOOR_URL: 'http://localhost:' + config.BACKDOOR_PORT + '/backdoor',
-
-    MONGO_URL: process.env.IGZ006_MONGO_URL || config.MONGO_URL,
-    DB_COLLECTION_NAME: 'cucumberly',
-
-    LOG_LEVEL: process.env.IGZ006_LOG_LEVEL || 'INFO'
+	database: {
+		url: process.env.IGZ006_MONGO_URL || configJson.database.url,
+		collectionName: 'cucumberly'
+	},
+	logLevel: 'info'
 };
