@@ -23,7 +23,7 @@ module.exports = () => {
 			delete obtainedFeature['id'];
 			delete obtainedFeature['featureId'];
 
-			if (_.isEqual(expectedScenarioData, obtainedFeature)) foundScenario = true;
+			if (_.isEqual(expectedScenarioData, obtainedFeature) && !foundScenario) foundScenario = true;
 		});
 
 		foundScenario.should.equal(true);
