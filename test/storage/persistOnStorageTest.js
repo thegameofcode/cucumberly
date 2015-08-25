@@ -1,71 +1,57 @@
 'use strict';
 
 const sinon = require('sinon'),
-    config = require('../../src/config'),
-    q = require('q'),
-    mockery = require('mockery');
+	config = require('../../src/config'),
+	q = require('q'),
+	mockery = require('mockery');
 require('chai').should();
 
 describe('Persist on storage', () => {
-    it('Should return a promise', () => {
-        let databaseStub = sinon.spy();
+	it('Should return a promise', () => {
+		const persistOnStorage = createPersistOnStorage(() => {return {then: () => {}}});
 
-        const persistOnStorage = createPersistOnStorage(databaseStub);
+		q.isPromiseAlike(persistOnStorage('persist something')).should.equal(true);
+	});
 
-        q.isPromiseAlike(persistOnStorage('persist something')).should.equal(true);
-    });
+	it('Should call the db publishValue method', () => {
+		let dataSentToPersist;
 
-    it('Should call the db publishValue method', () => {
+		const collectionStub = () => {
+			return {
+				then: (funcToInvoke => {
+					funcToInvoke({
+						insertOne: (dataToPersist, insertOneCallback) => {
+							dataSentToPersist = dataToPersist;
+							insertOneCallback(null);
 
-        let usedCollectionName;
-        let dataSentToPersist;
-        const collectionStub = {
-            collection: collectionName => {
-                usedCollectionName = collectionName;
-                return {
-                    insertOne: (dataToPersist, insertOneCallback) => {
-                        dataSentToPersist = dataToPersist;
-                        insertOneCallback(null);
-                    }
-                }
-            }
-        };
+						}
+					});
+				})
+			};
+		};
 
-        let dbConnectedToUrl;
-        const databaseStub = {
-            MongoClient: {
-                connect: (url, connectCallback) => {
-                    dbConnectedToUrl = url;
-                    connectCallback(null, collectionStub)
-                }
-            }
-        };
+		const persistOnStorage = createPersistOnStorage(collectionStub);
 
-        let persistOnStorage = createPersistOnStorage(databaseStub);
+		const dataToPersist = {some: 'data'};
+		return persistOnStorage(dataToPersist).then(() => {
+			dataSentToPersist.should.deep.equal(dataToPersist);
+		});
+	});
 
-        const dataToPersist = {some: 'data'};
-
-        return persistOnStorage(dataToPersist).then(() => {
-            dbConnectedToUrl.should.equal(config.database.url);
-            usedCollectionName.should.equal(config.database.collectionName);
-            dataSentToPersist.should.deep.equal(dataToPersist);
-        });
-    });
-
-    afterEach(() => {
-        mockery.deregisterAll();
-        mockery.disable();
-    });
+	afterEach(() => {
+		mockery.deregisterAll();
+		mockery.disable();
+	});
 });
 
-function createPersistOnStorage(databaseStub) {
-    mockery.registerMock('mongodb', databaseStub);
+function createPersistOnStorage(collectionStub) {
+	mockery.registerMock('./getCollection.js', collectionStub);
 
-    mockery.enable({
-        useCleanCache: true,
-        warnOnReplace: false,
-        warnOnUnregistered: false
-    });
+	mockery.enable({
+		useCleanCache: true,
+		warnOnReplace: false,
+		warnOnUnregistered: false
+	});
 
-    return require('../../src/storage/persistOnStorage.js');
+	return require('../../src/storage/persistOnStorage.js');
 }

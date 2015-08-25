@@ -9,45 +9,36 @@ require('chai').should();
 
 describe('Update in storage', () => {
 	it('Should return a promise', () => {
-		const updateInStorage = createUpdateInStorage(sinon.spy());
+		const updateInStorage = createUpdateInStorage(() => {return {then: () => {}}});
 
 		q.isPromiseAlike(updateInStorage('someId')).should.equal(true);
 	});
 
 	it('Should call the collection.update method', () => {
-		let usedCollectionName,
-			usedElementToUpdate,
+		let usedElementToUpdate,
 			usedFieldsToUpdate;
 
-		const collectionStub = {
-			collection: collectionName => {
-				usedCollectionName = collectionName;
-				return {
-					update: (elementToUpdate, fieldsToUpdate, updateCallback) => {
-						usedElementToUpdate = elementToUpdate;
-						usedFieldsToUpdate = fieldsToUpdate;
+		const collectionStub = () => {
+			return {
+				then: (funcToInvoke => {
+					funcToInvoke({
+						update: (elementToUpdate, fieldsToUpdate, updateCallback) => {
+							usedElementToUpdate = elementToUpdate;
+							usedFieldsToUpdate = fieldsToUpdate;
 
-						updateCallback(null);
-					}
-				}
-			}
+							updateCallback(null);
+						}
+					});
+				})
+			};
 		};
 
-		const databaseStub = {
-			MongoClient: {
-				connect: (url, connectCallback) => {
-					connectCallback(null, collectionStub)
-				}
-			}
-		};
-
-		const updateInStorage = createUpdateInStorage(databaseStub);
+		const updateInStorage = createUpdateInStorage(collectionStub);
 
 		const documentID = '123';
 		const dataToUpdate = {a: 1, b: 2};
 
 		return updateInStorage(documentID, dataToUpdate).then(() => {
-			usedCollectionName.should.equal(config.database.collectionName);
 			usedElementToUpdate.should.deep.equal({id: documentID});
 			usedFieldsToUpdate.should.deep.equal({$set: dataToUpdate});
 		});
@@ -60,8 +51,8 @@ describe('Update in storage', () => {
 });
 
 
-function createUpdateInStorage(databaseStub) {
-	mockery.registerMock('mongodb', databaseStub);
+function createUpdateInStorage(collectionStub) {
+	mockery.registerMock('./getCollection.js', collectionStub);
 
 	mockery.enable({
 		useCleanCache: true,

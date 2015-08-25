@@ -1,25 +1,18 @@
 'use strict';
 
-const mongoClient = require('mongodb').MongoClient,
-    config = require('../config.js');
+const getCollection = require('./getCollection.js');
 
-const url = config.database.url;
+let collection;
+getCollection().then(collectionInstance => collection = collectionInstance);
 
 module.exports = dataToPersist => {
-    return new Promise((resolve, reject) => {
-
-        mongoClient.connect(url, (err, db) => {
-
-            const collection = db.collection(config.database.collectionName);
-
-            collection.insertOne(dataToPersist, err => {
-                if (err !== null) {
-                    reject(Error(err));
-                } else {
-                    resolve();
-                }
-                db.close();
-            });
-        });
-    });
+	return new Promise((resolve, reject) => {
+		collection.insertOne(dataToPersist, err => {
+			if (err !== null) {
+				reject(Error(err));
+			} else {
+				resolve();
+			}
+		});
+	});
 };
