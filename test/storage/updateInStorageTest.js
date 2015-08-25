@@ -1,7 +1,6 @@
 'use strict';
 
 const sinon = require('sinon'),
-	config = require('../../src/config'),
 	q = require('q'),
 	mockery = require('mockery');
 require('chai').should();

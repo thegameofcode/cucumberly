@@ -28,7 +28,6 @@
     "sinon": "^1.16.1"
   },
   "dependencies": {
-    "async": "^1.4.2",
     "bunyan": "^1.4.0",
     "mongodb": "^2.0.42",
     "q": "^1.4.1",
