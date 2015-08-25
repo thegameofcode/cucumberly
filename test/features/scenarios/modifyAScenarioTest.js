@@ -13,7 +13,7 @@ describe('Modify a scenario', () => {
 		const updateInStorageStub = sinon.stub();
 		updateInStorageStub.returns(promise);
 
-		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub);
+		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub, () => {});
 		modifyScenario(createRequestStub('123'), createResponseStub(), done);
 
 		deferred.resolve();
@@ -32,7 +32,11 @@ describe('Modify a scenario', () => {
 
 		const requestStub = createRequestStub(featureId, scenarioId, dataToUpdate);
 
-		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub);
+		const assembledDataToUpdateStub = sinon.stub();
+		assembledDataToUpdateStub.withArgs(scenarioId, requestStub).returns({transformed: 'data'});
+
+
+		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub, assembledDataToUpdateStub);
 		modifyScenario(requestStub, createResponseStub(), checkResponse);
 
 		deferred.resolve();
@@ -40,7 +44,7 @@ describe('Modify a scenario', () => {
 		function checkResponse () {
 			updateInStorageStub.calledOnce.should.equal(true);
 			updateInStorageStub.args[0][0].should.deep.equal(scenarioId);
-			updateInStorageStub.args[0][1].should.deep.equal(dataToUpdate);
+			updateInStorageStub.args[0][1].should.deep.equal({transformed: 'data'});
 			done();
 		}
 	});
@@ -56,7 +60,7 @@ describe('Modify a scenario', () => {
 		const responseStub = createResponseStub();
 		const responseSpy = sinon.spy(responseStub, 'json');
 
-		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub);
+		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub, () => {});
 		modifyScenario(requestStub, responseStub, checkResponse);
 
 		deferred.resolve();
@@ -91,8 +95,9 @@ function createRequestStub(featureId, scenarioId, bodyContent) {
 }
 
 
-function createModifyScenarioMiddleware(updateInStorageStub) {
+function createModifyScenarioMiddleware(updateInStorageStub, assembledDataToUpdateStub) {
 	mockery.registerMock('./../../storage/updateInStorage.js', updateInStorageStub);
+	mockery.registerMock('./assembleScenarioToPersist', assembledDataToUpdateStub);
 
 	mockery.enable({
 		useCleanCache: true,

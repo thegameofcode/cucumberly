@@ -13,8 +13,8 @@ Feature: Save features
       | Add two numbers | addition of two numbers | ["I have entered 2 and 3"] | ["I press calculate"] | ["the result is 5"] |
     And the scenario has the id "scenario-id-alias-1"
     When I ask cucumberly to modify my scenario with id "scenario-id-alias-1" from feature "feature-id-alias-1" with data
-      | name          | given                                                         | when                  | then                |
-      | add 2 numbers | ["I have forgotten all about math", "I have entered 2 and 3"] | ["I press calculate"] | ["the result is 5"] |
+      | name          | given                                                         |
+      | add 2 numbers | ["I have forgotten all about math", "I have entered 2 and 3"] |
     Then the response code is 200
     When I ask cucumberly to give me my scenarios of feature "feature-id-alias-1"
     And one of the scenarios is

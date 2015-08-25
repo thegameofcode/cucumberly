@@ -13,7 +13,7 @@ describe('Retrieve all scenarios for a given feature id', () => {
 		const retrieveFromStorageStub = sinon.stub();
 		retrieveFromStorageStub.returns(promise);
 
-		const retrieveAllScenarios = createRetrieveAllScenariosMiddleware(retrieveFromStorageStub);
+		const retrieveAllScenarios = createRetrieveAllScenariosMiddleware(retrieveFromStorageStub, () => {});
 		retrieveAllScenarios(createRequestStub('abc'), createResponseStub(), done);
 
 		deferred.resolve();
@@ -29,7 +29,7 @@ describe('Retrieve all scenarios for a given feature id', () => {
 		const retrieveFromStorageStub = sinon.stub();
 		retrieveFromStorageStub.returns(promise);
 
-		const retrieveAllScenarios = createRetrieveAllScenariosMiddleware(retrieveFromStorageStub);
+		const retrieveAllScenarios = createRetrieveAllScenariosMiddleware(retrieveFromStorageStub, () => {});
 		retrieveAllScenarios(createRequestStub('abc'), responseStub, checkResponse);
 
 		function checkResponse () {
@@ -50,12 +50,18 @@ describe('Retrieve all scenarios for a given feature id', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const storageResponse = {a: 1, b: 2};
 		const retrieveFromStorageStub = sinon.stub();
 		retrieveFromStorageStub.withArgs({featureId: featureId}).returns(promise);
 
-		const retrieveAllScenarios = createRetrieveAllScenariosMiddleware(retrieveFromStorageStub);
+		const storageResponse = {a: 1, b: 2};
+		const assembleResponseBody = sinon.stub();
+
+		const assembledBody = {c: 3, d: 4};
+		assembleResponseBody.withArgs(storageResponse).returns(assembledBody);
+
+		const retrieveAllScenarios = createRetrieveAllScenariosMiddleware(retrieveFromStorageStub, assembleResponseBody);
 		retrieveAllScenarios(requestStub, responseStub, checkResponse);
+
 
 		deferred.resolve(storageResponse);
 
@@ -63,8 +69,8 @@ describe('Retrieve all scenarios for a given feature id', () => {
 			responseSpy.args[0][0].should.equal(200);
 
 			const body = responseSpy.args[0][1];
-			should.exist(body.items);
-			body.items.should.deep.equal(storageResponse);
+			should.exist(body);
+			body.should.deep.equal(assembledBody);
 			done();
 		}
 	});
@@ -87,8 +93,9 @@ function createRequestStub(featureId) {
 	};
 }
 
-function createRetrieveAllScenariosMiddleware(retrieveFromStorageStub) {
+function createRetrieveAllScenariosMiddleware(retrieveFromStorageStub, assembleResponseBody) {
 	mockery.registerMock('./../../storage/retrieveFromStorage.js', retrieveFromStorageStub);
+	mockery.registerMock('./assembleResponseBody.js', assembleResponseBody);
 
 	mockery.enable({
 		useCleanCache: true,

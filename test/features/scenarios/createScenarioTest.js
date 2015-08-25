@@ -17,7 +17,7 @@ describe('Create scenario', () => {
 		let persistOnStorageStub = sinon.stub();
 		persistOnStorageStub.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub);
+		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub, () => {});
 		createScenario(mockRequest(), mockResponse(), done);
 
 		deferred.resolve();
@@ -33,7 +33,7 @@ describe('Create scenario', () => {
 		let persistOnStorageStub = sinon.stub();
 		persistOnStorageStub.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub);
+		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub, () => {});
 		createScenario(mockRequest(), responseMock, checkResponse);
 
 		deferred.resolve();
@@ -53,7 +53,7 @@ describe('Create scenario', () => {
 		let persistOnStorageStub = sinon.stub();
 		persistOnStorageStub.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub);
+		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub, () => {});
 		createScenario(mockRequest(), responseMock, checkResponse);
 
 		deferred.resolve();
@@ -75,8 +75,9 @@ describe('Create scenario', () => {
 
 		const featureId = 'abc1234';
 		const mockedRequest = mockRequest(featureId);
+		const assembleScenarioToPersistStub = () => {return {some: 'thing'}};
 
-		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub);
+		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub, assembleScenarioToPersistStub);
 		createScenario(mockedRequest, mockResponse(), checkResponse);
 
 		deferred.resolve();
@@ -84,15 +85,7 @@ describe('Create scenario', () => {
 		function checkResponse() {
 			persistOnStorageStub.calledOnce.should.equal(true);
 
-			const elementsToPersist = persistOnStorageStub.args[0][0];
-			const expectedPersistedElements = _.assign(
-				mockedRequest.body,
-				{
-					id: idsGeneratorStub(),
-					featureId: featureId
-				});
-
-			elementsToPersist.should.deep.equal(expectedPersistedElements);
+			persistOnStorageStub.args[0][0].should.deep.equal({some: 'thing'});
 			done();
 		}
 	});
@@ -104,9 +97,10 @@ describe('Create scenario', () => {
 });
 
 
-function getCreateScenarioMiddleware(idsMock, persistOnStorageStub) {
+function getCreateScenarioMiddleware(idsMock, persistOnStorageStub, assembleScenarioToPersistStub) {
 	mockery.registerMock('../../idsGenerator/generateId.js', idsMock);
 	mockery.registerMock('../../storage/persistOnStorage.js', persistOnStorageStub);
+	mockery.registerMock('./assembleScenarioToPersist.js', assembleScenarioToPersistStub);
 
 	mockery.enable({
 		useCleanCache: true,
