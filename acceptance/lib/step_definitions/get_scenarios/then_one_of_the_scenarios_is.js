@@ -19,10 +19,6 @@ module.exports = () => {
 
 		let foundScenario = false;
 		obtainedScenarios.forEach(obtainedFeature => {
-			delete obtainedFeature['_id'];
-			delete obtainedFeature['id'];
-			delete obtainedFeature['featureId'];
-			
 			if (_.isEqual(expectedScenarioData, obtainedFeature) && !foundScenario) foundScenario = true;
 		});
 
