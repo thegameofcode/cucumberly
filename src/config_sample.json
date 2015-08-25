@@ -4,10 +4,6 @@
     "port": 4000,
     "url": "http://localhost:4000"
   },
-  "backdoor": {
-    "port": 4001,
-    "url": "http://localhost:4001/backdoor"
-  },
   "database": {
     "url": "mongodb://127.0.0.1:27017/cucumberly?w=1",
     "collectionName": "cucumberly"

@@ -9,11 +9,6 @@ module.exports = {
 		port: process.env.IGZ006_PORT || process.env.PORT || configJson.app.port,
 		url: 'http://localhost:4000'
 	},
-	backdoor: {
-		port: configJson.backdoor.port,
-		url: 'http://localhost:' + configJson.backdoor.url + '/backdoor'
-	},
-
 	database: {
 		url: process.env.IGZ006_MONGO_URL || configJson.database.url,
 		collectionName: 'cucumberly'

@@ -5,7 +5,6 @@
   "main": "./src/start.js",
   "scripts": {
     "start": "node --harmony ./src/start.js",
-    "backdoor": "node --harmony ./src/test_backdoor/start.js",
     "jshint": "node --harmony node_modules/.bin/jshint ./src ./test ./features",
     "test": "node node_modules/.bin/mocha --harmony ./test/** ./test/**/**",
     "acceptance": "node --harmony node_modules/.bin/cucumber.js acceptance/features -r ./acceptance/lib/step_definitions --tags ~@pending --format pretty",

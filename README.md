@@ -14,8 +14,7 @@ npm start
 ### Run tests
 
 Make sure you have a mongodb instance running.
-For now you'll have to launch the server itself and the backdoor server for acceptance test purposes.
-`npm start`, `npm run backdoor`
+Launch manually the server and ...
 
 ```
 npm run acceptance
