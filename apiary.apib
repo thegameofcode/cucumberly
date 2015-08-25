@@ -1,0 +1,148 @@
+FORMAT: 1A
+
+
+# cucumberly
+
+Cucumberly is a gherkin editor for muggles, but it's still in its early stages. Show some love and contribute :)
+
+# Group Features
+
+## Features [/api/features]
+
+### List All Features [GET]
+
++ Response 200 (application/json)
+
+        [
+            {
+                "items": [
+                    {
+                        "name": "Addition",
+                        "id": "79aed2e7-a5b1-4b46-93d5-e481575692c5"
+                        "description": {
+                            "beneficiary": "math idiot",
+                            "motivation": "avoid silly mistakes",
+                            "expectedBehaviour": "to be told the sum of two numbers"
+                        }
+                    }
+                ]
+            }
+        ]
+
+### Create a New Feature [POST]
+
++ Request (application/json)
+
+        {
+            "name": "Addition",
+            "description": {
+                "beneficiary": "math idiot",
+                "motivation": "avoid silly mistakes",
+                "expectedBehaviour": "to be told the sum of two numbers"
+            }
+        }
+
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "79aed2e7-a5b1-4b46-93d5-e481575692c5"
+            }
+
+
+## Modify a feature [/api/features/{featureId}]
+
+### Update a features [PUT]
+
+Just submit the fields you want to update
+
++ Request (application/json)
+
+        {
+            "name": "Addition",
+            "description": {
+                "motivation": "avoid silly mistakes"
+            }
+        }
+        
+        + Response 201 (application/json)
+
++ Response 200 (application/json)
+    
+## Scenarios [/api/features/{featureId}/scenarios]
+
+### List All Scenarios [GET]
+
++ Response 200 (application/json)
+
+    + Body
+        
+            {
+                "items": [
+                    {
+                        "name": "Add two numbers",
+                        "id": "79aed2e7-a5b1-4b46-93d5-e481575692c5",
+                        "description": "addition of two numbers",
+                        "steps": {
+                            "given": [
+                                "I have forgotten all about math", 
+                                "I have entered 2 and 3"
+                            ],
+                            "when": [
+                                "I press calculate"
+                            ],
+                            "then": [
+                                "the result is 5"
+                            ]
+                        }
+                    }
+                ]
+            }
+        
+        
+### Create a new scenario [POST]
+
+
++ Request (application/json)
+
+            {
+                    "name": "Add two numbers",
+                    "description": "addition of two numbers",
+                    "steps": {
+                        "given": [
+                            "I have forgotten all about math", 
+                            "I have entered 2 and 3"
+                        ],
+                        "when": [
+                            "I press calculate"
+                        ],
+                        "then": [
+                            "the result is 5"
+                        ]
+                    }
+                }
+        
++ Response 201 (application/json)
+
+    + Body
+
+            {
+                "id": "79aed2e7-a5b1-4b46-93d5-e481575692c5"
+            }
+            
+## Modify an existing scenario [/api/features/{featureId}/scenarios/{scenarioId}]
+
+
+### Modify a scenario [PUT]
+
+
++ Request (application/json)
+
+        {
+            "name": "Addition"
+        }
+        
+        + Response 201 (application/json)
+
++ Response 200 (application/json)
