@@ -66,14 +66,15 @@ describe('Create scenario', () => {
 		}
 	});
 
-	it('Should store the features data and id', done => {
+	it('Should store the scenario data, id and the feature id as well', done => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
 		let persistOnStorageStub = sinon.stub();
 		persistOnStorageStub.returns(promise);
 
-		const mockedRequest = mockRequest();
+		const featureId = 'abc1234';
+		const mockedRequest = mockRequest(featureId);
 
 		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub);
 		createScenario(mockedRequest, mockResponse(), checkResponse);
@@ -84,7 +85,12 @@ describe('Create scenario', () => {
 			persistOnStorageStub.calledOnce.should.equal(true);
 
 			const elementsToPersist = persistOnStorageStub.args[0][0];
-			const expectedPersistedElements = _.assign(mockedRequest.body, {id: idsGeneratorStub()});
+			const expectedPersistedElements = _.assign(
+				mockedRequest.body,
+				{
+					id: idsGeneratorStub(),
+					featureId: featureId
+				});
 
 			elementsToPersist.should.deep.equal(expectedPersistedElements);
 			done();
@@ -118,8 +124,11 @@ function mockResponse() {
 	}
 }
 
-function mockRequest() {
+function mockRequest(featureId) {
 	return {
+		context: {
+			featureId: featureId
+		},
 		body: {
 			a: 1,
 			b: 2

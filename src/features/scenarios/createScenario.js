@@ -19,5 +19,10 @@ function assembleResponseBody(scenarioId) {
 
 
 function assembleDocumentToPersist(scenarioId, request) {
-	return _.assign({id: scenarioId}, request.body);
+	return _.assign(
+		request.body,
+		{
+			id: scenarioId,
+			featureId: request.context.featureId
+		});
 }
