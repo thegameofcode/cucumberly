@@ -13,45 +13,23 @@ server.use(restify.queryParser());
 server.use(restify.bodyParser());
 
 server.get(/\/html\/?.*/,
-    restify.serveStatic({
-        'directory': __dirname,
-        'default': 'index.html'
-    })
+	restify.serveStatic({
+		'directory': __dirname,
+		'default': 'index.html'
+	})
 );
 
-require('./schemas');
-require('./routes')(server);
 registerServices(server);
 
 module.exports = {
-    start: (mongourl, port, callback) => {
-        log.info('starting', config.app.name, mongourl, port);
-        async.series(
-            [
-                    next => {
-                    mongoose.connect(mongourl, err => {
-                        const db = mongoose.connection;
-                        db.on('error', err => log.error('mongoose err', err));
-                        db.once('open', () => log.info('mongoose ok'));
-
-                        if (err) log.error(err);
-                        else log.warn('MongoDB connected to ' + mongourl);
-
-                        next();
-                    });
-                },
-                    next => {
-                    server.listen(port, () => {
-                        log.warn('port', port);
-                        log.warn('%s listening at %s', server.name, server.url);
-                        next();
-                    });
-                }
-            ],
-            () => callback()
-        );
-    },
-    stop: (callback) => {
-        server.close(() => mongoose.disconnect(callback));
-    }
+	start: (port, callback) => {
+		server.listen(port, () => {
+			log.warn('port', port);
+			log.warn('%s listening at %s', server.name, server.url);
+		});
+		callback()
+	},
+	stop: (callback) => {
+		server.close(callback);
+	}
 };
