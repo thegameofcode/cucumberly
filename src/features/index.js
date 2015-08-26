@@ -5,9 +5,11 @@ const createFeature = require('./createFeature.js'),
     retrieveFeatures = require('./retrieveFeatures.js'),
 	deleteFeature = require('./deleteFeature.js'),
 	deleteAllFeatures = require('./deleteAllFeatures.js'),
+
 	createScenario = require('./scenarios/createScenario.js'),
 	retrieveAllScenarios = require('./scenarios/retrieveAllScenarios.js'),
-	modifyAScenario = require('./scenarios/modifyAScenario.js');
+	modifyAScenario = require('./scenarios/modifyAScenario.js'),
+	deleteScenario = require('./scenarios/deleteScenario.js');
 
 module.exports = server => {
     server.post('/api/features', createFeature);
@@ -19,4 +21,5 @@ module.exports = server => {
 	server.post('/api/features/:featureId/scenarios', createScenario);
 	server.get('/api/features/:featureId/scenarios', retrieveAllScenarios);
 	server.put('/api/features/:featureId/scenarios/:scenarioId', modifyAScenario);
+	server.del('/api/features/:featureId/scenarios/:scenarioId', deleteScenario);
 };
