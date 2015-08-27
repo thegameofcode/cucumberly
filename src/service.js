@@ -1,7 +1,6 @@
 'use strict';
 
 const async = require('async');
-const mongoose = require('mongoose');
 const restify = require('restify');
 const registerServices = require('./registerServices');
 

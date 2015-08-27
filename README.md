@@ -14,7 +14,7 @@ npm start
 ### Run tests
 
 Make sure you have a mongodb instance running.
-Launch manually the server and ...
+**Important:** Launch manually the server before run the acceptance tests.
 
 ```
 npm run acceptance
