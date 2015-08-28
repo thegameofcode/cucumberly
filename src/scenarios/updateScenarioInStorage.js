@@ -3,13 +3,13 @@
 const updateInStorage = require('../storage/updateInStorage.js');
 
 module.exports = (featureId, scenarioId, elementsToUpdate) => {
-	const queryToFindElement = {id: featureId, 'scenarios.id': scenarioId}
-	const updateQuery = {$set: createFieldToBeUpdated(scenarioId, elementsToUpdate)};
+	const queryToFindElement = {id: featureId, 'scenarios.id': scenarioId};
+	const updateQuery = {$set: createFieldToBeUpdated(elementsToUpdate)};
 
 	return updateInStorage(queryToFindElement, updateQuery);
 };
 
-function createFieldToBeUpdated(scenarioId, elementsToUpdate){
+function createFieldToBeUpdated(elementsToUpdate){
 	let fieldToBeUpdated = {};
 	if (elementsToUpdate.name !== undefined) {
 		fieldToBeUpdated['scenarios.$.name'] = elementsToUpdate.name;

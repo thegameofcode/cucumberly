@@ -19,12 +19,12 @@ module.exports = () => {
 		const responseBody = world.lastResponseBody;
 
 		const featureId = world[featureIdAlias];
-		
+
 		let foundScenario = false;
 		responseBody.items.forEach(feature => {
 			if(feature.id === featureId && feature.scenarios !== undefined) {
 				feature.scenarios.forEach(scenario => {
-					delete scenario.id
+					delete scenario.id;
 					if (_.isEqual(expectedScenarioData, scenario) && !foundScenario) foundScenario = true;
 				});
 			}
