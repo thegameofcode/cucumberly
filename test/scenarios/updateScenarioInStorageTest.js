@@ -15,11 +15,11 @@ describe('Update scenario in storage', () => {
 
 		const updateScenario = createUpdateScenario(updateInStorageStub);
 
-		updateScenario('abc', 0, {name: 'AbC'}).then(() => {
+		updateScenario('featureID123', 'scenarioID123', {name: 'AbC'}).then(() => {
 			updateInStorageStub.calledOnce.should.equal(true);
 
-			updateInStorageStub.args[0][0].should.deep.equal({id: 'abc'});
-			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.0.name': 'AbC'}});
+			updateInStorageStub.args[0][0].should.deep.equal({id: 'featureID123', 'scenarios.id': 'scenarioID123'});
+			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.$.name': 'AbC'}});
 			done();
 		});
 
@@ -39,11 +39,11 @@ describe('Update scenario in storage', () => {
 		const elementsToUpdate = {
 			steps: {given: [1, 2, 3]}
 		};
-		updateScenario('abc', 0, elementsToUpdate).then(() => {
+		updateScenario('featureID123', 'scenarioID123', elementsToUpdate).then(() => {
 			updateInStorageStub.calledOnce.should.equal(true);
 
-			updateInStorageStub.args[0][0].should.deep.equal({id: 'abc'});
-			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.0.steps.given': [1, 2, 3]}});
+			updateInStorageStub.args[0][0].should.deep.equal({id: 'featureID123', 'scenarios.id': 'scenarioID123'});
+			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.$.steps.given': [1, 2, 3]}});
 			done();
 		});
 
@@ -62,11 +62,11 @@ describe('Update scenario in storage', () => {
 		const elementsToUpdate = {
 			steps: {when: [1, 2, 3]}
 		};
-		updateScenario('abc', 0, elementsToUpdate).then(() => {
+		updateScenario('featureID123', 'scenarioID123', elementsToUpdate).then(() => {
 			updateInStorageStub.calledOnce.should.equal(true);
 
-			updateInStorageStub.args[0][0].should.deep.equal({id: 'abc'});
-			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.0.steps.when': [1, 2, 3]}});
+			updateInStorageStub.args[0][0].should.deep.equal({id: 'featureID123', 'scenarios.id': 'scenarioID123'});
+			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.$.steps.when': [1, 2, 3]}});
 			done();
 		});
 
@@ -86,11 +86,11 @@ describe('Update scenario in storage', () => {
 		const elementsToUpdate = {
 			steps: {then: [1, 2, 3]}
 		};
-		updateScenario('abc', 0, elementsToUpdate).then(() => {
+		updateScenario('featureID123', 'scenarioID123', elementsToUpdate).then(() => {
 			updateInStorageStub.calledOnce.should.equal(true);
 
-			updateInStorageStub.args[0][0].should.deep.equal({id: 'abc'});
-			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.0.steps.then': [1, 2, 3]}});
+			updateInStorageStub.args[0][0].should.deep.equal({id: 'featureID123', 'scenarios.id': 'scenarioID123'});
+			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.$.steps.then': [1, 2, 3]}});
 			done();
 		});
 
@@ -111,11 +111,11 @@ describe('Update scenario in storage', () => {
 			name: 'new name',
 			steps: {then: [1, 2, 3]}
 		};
-		updateScenario('abc', 0, elementsToUpdate).then(() => {
+		updateScenario('featureID123', 'scenarioID123', elementsToUpdate).then(() => {
 			updateInStorageStub.calledOnce.should.equal(true);
 
-			updateInStorageStub.args[0][0].should.deep.equal({id: 'abc'});
-			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.0.name': 'new name','scenarios.0.steps.then': [1, 2, 3]}});
+			updateInStorageStub.args[0][0].should.deep.equal({id: 'featureID123', 'scenarios.id': 'scenarioID123'});
+			updateInStorageStub.args[0][1].should.deep.equal({$set: {'scenarios.$.name': 'new name','scenarios.$.steps.then': [1, 2, 3]}});
 			done();
 		});
 

@@ -3,9 +3,12 @@
 const sinon = require('sinon'),
 	q = require('q'),
 	mockery = require('mockery'),
+	_ = require('lodash'),
 	should = require('chai').should();
 
 describe('Create scenario', () => {
+
+	const idsGeneratorStub = () => '123';
 
 	it('Should call the next callback', done => {
 		let deferred = q.defer();
@@ -14,10 +17,10 @@ describe('Create scenario', () => {
 		let persistScenarioInStorage = sinon.stub();
 		persistScenarioInStorage.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(persistScenarioInStorage, () => {});
+		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistScenarioInStorage, () => {});
 		createScenario(mockRequest(), mockResponse(), done);
 
-		deferred.resolve(6);
+		deferred.resolve();
 	});
 
 	it('Should return 201 created', done => {
@@ -30,17 +33,17 @@ describe('Create scenario', () => {
 		let persistScenarioInStorage = sinon.stub();
 		persistScenarioInStorage.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(persistScenarioInStorage, () => {});
+		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistScenarioInStorage, () => {});
 		createScenario(mockRequest(), responseMock, checkResponse);
 
-		deferred.resolve(1);
+		deferred.resolve();
 		function checkResponse() {
 			responseSpy.args[0][0].should.equal(201);
 			done();
 		}
 	});
 
-	it('Should return an id property of a fixed value 0 for now', done => {
+	it('Should return an id property with the scenario id', done => {
 		const responseMock = mockResponse();
 		const responseSpy = sinon.spy(responseMock, 'json');
 
@@ -50,19 +53,19 @@ describe('Create scenario', () => {
 		let persistScenarioInStorage = sinon.stub();
 		persistScenarioInStorage.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(persistScenarioInStorage, () => {});
+		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistScenarioInStorage, () => {});
 		createScenario(mockRequest(), responseMock, checkResponse);
 
-		deferred.resolve(3);
+		deferred.resolve();
 
 		function checkResponse() {
 			const body = responseSpy.args[0][1];
-			body.should.deep.equal({id: 0});
+			body.should.deep.equal({id: idsGeneratorStub()});
 			done();
 		}
 	});
 
-	it('Should store the scenario data, id and the feature id as well', done => {
+	it('Should store the scenario data and id', done => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
@@ -72,16 +75,16 @@ describe('Create scenario', () => {
 		const featureId = 'abc1234';
 		const mockedRequest = mockRequest(featureId);
 
-		const createScenario = getCreateScenarioMiddleware(persistScenarioInStorage);
+		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistScenarioInStorage);
 		createScenario(mockedRequest, mockResponse(), checkResponse);
 
-		deferred.resolve(2);
+		deferred.resolve();
 
 		function checkResponse() {
 			persistScenarioInStorage.calledOnce.should.equal(true);
 
 			persistScenarioInStorage.args[0][0].should.equal(featureId);
-			persistScenarioInStorage.args[0][1].should.equal(mockedRequest.body);
+			persistScenarioInStorage.args[0][1].should.deep.equal(_.assign({id: idsGeneratorStub()}, mockedRequest.body));
 			done();
 		}
 	});
@@ -93,7 +96,8 @@ describe('Create scenario', () => {
 });
 
 
-function getCreateScenarioMiddleware(persistScenarioInStorage) {
+function getCreateScenarioMiddleware(idsMock, persistScenarioInStorage) {
+	mockery.registerMock('../idsGenerator/generateId.js', idsMock);
 	mockery.registerMock('./persistScenarioInStorage.js', persistScenarioInStorage);
 
 	mockery.enable({

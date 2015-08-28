@@ -3,27 +3,28 @@
 const updateInStorage = require('../storage/updateInStorage.js');
 
 module.exports = (featureId, scenarioId, elementsToUpdate) => {
+	const queryToFindElement = {id: featureId, 'scenarios.id': scenarioId}
 	const updateQuery = {$set: createFieldToBeUpdated(scenarioId, elementsToUpdate)};
 
-	return updateInStorage({id: featureId}, updateQuery);
+	return updateInStorage(queryToFindElement, updateQuery);
 };
 
 function createFieldToBeUpdated(scenarioId, elementsToUpdate){
 	let fieldToBeUpdated = {};
 	if (elementsToUpdate.name !== undefined) {
-		fieldToBeUpdated['scenarios.' + scenarioId +'.name'] = elementsToUpdate.name;
+		fieldToBeUpdated['scenarios.$.name'] = elementsToUpdate.name;
 	}
 
 	if (elementsToUpdate.steps !== undefined && elementsToUpdate.steps.given !== undefined) {
-		fieldToBeUpdated['scenarios.' + scenarioId +'.steps.given'] = elementsToUpdate.steps.given;
+		fieldToBeUpdated['scenarios.$.steps.given'] = elementsToUpdate.steps.given;
 	}
 
 	if (elementsToUpdate.steps !== undefined && elementsToUpdate.steps.when !== undefined) {
-		fieldToBeUpdated['scenarios.' + scenarioId +'.steps.when'] = elementsToUpdate.steps.when;
+		fieldToBeUpdated['scenarios.$.steps.when'] = elementsToUpdate.steps.when;
 	}
 
 	if (elementsToUpdate.steps !== undefined && elementsToUpdate.steps.then !== undefined) {
-		fieldToBeUpdated['scenarios.' + scenarioId +'.steps.then'] = elementsToUpdate.steps.then;
+		fieldToBeUpdated['scenarios.$.steps.then'] = elementsToUpdate.steps.then;
 	}
 
 	return fieldToBeUpdated;

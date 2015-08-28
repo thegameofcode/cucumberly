@@ -1,11 +1,13 @@
 'use strict';
 
 const _ = require('lodash'),
+	generateId = require('../idsGenerator/generateId.js'),
 	persistScenarioInStorage = require('./persistScenarioInStorage.js');
 
 module.exports = (request, response, next) => {
-	persistScenarioInStorage(request.context.featureId, request.body).then(scenarioPosition => {
-		response.json(201, {id: 0});
+	const scenarioId = generateId();
+	persistScenarioInStorage(request.context.featureId, _.assign({id: scenarioId}, request.body)).then(() => {
+		response.json(201, {id: scenarioId});
 		return next();
 	});
 };
