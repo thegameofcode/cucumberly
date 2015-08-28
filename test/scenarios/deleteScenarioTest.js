@@ -85,7 +85,7 @@ function createRequestStub(featureId, scenarioId) {
 
 
 function createDeleteScenarioMiddleware(deleteFromStorageStub) {
-	mockery.registerMock('../../storage/deleteFromStorage.js', deleteFromStorageStub);
+	mockery.registerMock('../storage/deleteFromStorage.js', deleteFromStorageStub);
 
 	mockery.enable({
 		useCleanCache: true,
@@ -93,5 +93,5 @@ function createDeleteScenarioMiddleware(deleteFromStorageStub) {
 		warnOnUnregistered: false
 	});
 
-	return require('../../../src/features/scenarios/deleteScenario.js');
+	return require('../../src/scenarios/deleteScenario.js');
 }

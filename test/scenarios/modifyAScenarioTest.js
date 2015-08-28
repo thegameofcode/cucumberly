@@ -102,5 +102,5 @@ function createModifyScenarioMiddleware(updateInStorageStub) {
 		warnOnUnregistered: false
 	});
 
-	return require('../../../src/features/scenarios/modifyAScenario.js');
+	return require('../../src/scenarios/modifyAScenario.js');
 }

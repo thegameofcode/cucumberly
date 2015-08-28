@@ -2,7 +2,8 @@
 
 const modules = [
     require('./features'),
-    require('./books')
+    require('./books'),
+    require('./scenarios')
 ];
 
 module.exports = (server) => {

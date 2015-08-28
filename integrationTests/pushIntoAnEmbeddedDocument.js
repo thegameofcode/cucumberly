@@ -128,36 +128,39 @@ describe('Push into an embedded document', () => {
 	it('Should update an array into a embedded document', done => {
 		const documentToSave = {
 			firstField: 'some value',
-			scenarios: {
-				firstScenario: {
+			scenarios: [
+				{
 					name: 'first scenario',
+					id: 123,
 					steps: {
 						given: [1, 2, 3],
 						when: [6, 6],
 						then: [1, 2, 3]
 					}
 				}
-			}
+			]
 		};
 
-		const updateQuery = {$set: {'scenarios.firstScenario.steps.when': [1, 2, 3]}};
+		const findElementQuery = {firstField: 'some value', 'scenarios.id': 123};
+		const updateQuery = {$set: {'scenarios.$.steps.when': [1, 2, 3]}};
 
 		const expectedUpdatedDocument = {
 			firstField: 'some value',
-			scenarios: {
-				firstScenario: {
+			scenarios: [
+				{
 					name: 'first scenario',
+					id: 123,
 					steps: {
 						given: [1, 2, 3],
 						when: [1, 2, 3],
 						then: [1, 2, 3]
 					}
 				}
-			}
+			]
 		};
 
 		persistOnStorage(documentToSave)
-			.then(() => updateInStorage({firstField: 'some value'}, updateQuery))
+			.then(() => updateInStorage(findElementQuery, updateQuery))
 			.then(() => retrieveFromStorage({firstField: 'some value'}))
 			.then(retrievedDocuments => {
 				should.exist(retrievedDocuments[0]);

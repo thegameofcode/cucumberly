@@ -131,7 +131,7 @@ describe('Update scenario in storage', () => {
 
 
 function createUpdateScenario(updateInStorageStub) {
-	mockery.registerMock('../../storage/updateInStorage.js', updateInStorageStub);
+	mockery.registerMock('../storage/updateInStorage.js', updateInStorageStub);
 
 	mockery.enable({
 		useCleanCache: true,
@@ -139,5 +139,5 @@ function createUpdateScenario(updateInStorageStub) {
 		warnOnUnregistered: false
 	});
 
-	return require('../../../src/features/scenarios/updateScenarioInStorage.js');
+	return require('../../src/scenarios/updateScenarioInStorage.js');
 }

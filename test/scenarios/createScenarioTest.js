@@ -102,7 +102,7 @@ function getCreateScenarioMiddleware(persistScenarioInStorage) {
 		warnOnUnregistered: false
 	});
 
-	return require('../../../src/features/scenarios/createScenario.js');
+	return require('../../src/scenarios/createScenario.js');
 }
 
 

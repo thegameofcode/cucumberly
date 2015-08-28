@@ -40,7 +40,7 @@ describe('Persist scenario in storage', () => {
 
 
 function createPersistScenarioInStorage(updateInStorage) {
-	mockery.registerMock('../../storage/updateInStorage.js', updateInStorage);
+	mockery.registerMock('../storage/updateInStorage.js', updateInStorage);
 
 	mockery.enable({
 		useCleanCache: true,
@@ -48,5 +48,5 @@ function createPersistScenarioInStorage(updateInStorage) {
 		warnOnUnregistered: false
 	});
 
-	return require('../../../src/features/scenarios/persistScenarioInStorage.js');
+	return require('../../src/scenarios/persistScenarioInStorage.js');
 }
