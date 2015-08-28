@@ -1,6 +1,7 @@
 'use strict';
 
-const getBook = require('../../books/get_book.js');
+const getBook = require('../../books/get_book.js'),
+	_ = require('lodash');
 
 module.exports = () => {
 	this.Then(/^the scenario with id "([^"]*)" from feature "([^"]*)" does not exist anymore$/, (scenarioIdAlias, featureIdAlias, done) => {
@@ -16,7 +17,7 @@ module.exports = () => {
 			responseBody.items.forEach(feature => {
 				if(feature.id === featureId && feature.scenarios !== undefined) {
 					feature.scenarios.forEach(scenario => {
-						if (scenario.id === scenarioId && !foundScenario) foundScenario = true;
+						if (!_.isEmpty(scenario) && scenario.id === scenarioId && !foundScenario) foundScenario = true;
 					});
 				}
 			});

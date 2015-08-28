@@ -10,10 +10,10 @@ describe('Delete scenario', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const deleteFromStorageStub = sinon.stub();
-		deleteFromStorageStub.returns(promise);
+		const updateInStorageStub = sinon.stub();
+		updateInStorageStub.returns(promise);
 
-		const deleteScenario = createDeleteScenarioMiddleware(deleteFromStorageStub);
+		const deleteScenario = createDeleteScenarioMiddleware(updateInStorageStub);
 		deleteScenario(createRequestStub('id1', 'id2'), createResponseStub(), done);
 
 		deferred.resolve();
@@ -26,10 +26,10 @@ describe('Delete scenario', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const deleteFromStorageStub = sinon.stub();
-		deleteFromStorageStub.returns(promise);
+		const updateInStorageStub = sinon.stub();
+		updateInStorageStub.returns(promise);
 
-		const deleteScenario = createDeleteScenarioMiddleware(deleteFromStorageStub);
+		const deleteScenario = createDeleteScenarioMiddleware(updateInStorageStub);
 		deleteScenario(createRequestStub('id1', 'id2'), responseStub, checkResponse);
 
 		function checkResponse(){
@@ -44,17 +44,19 @@ describe('Delete scenario', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const deleteFromStorageStub = sinon.stub();
-		deleteFromStorageStub.returns(promise);
+		const updateInStorageStub = sinon.stub();
+		updateInStorageStub.returns(promise);
 
+		const featureId = '1234567';
 		const scenarioId = 'qwerty';
 
-		const deleteScenario = createDeleteScenarioMiddleware(deleteFromStorageStub);
-		deleteScenario(createRequestStub('id1', scenarioId), createResponseStub(), checkResponse);
+		const deleteScenario = createDeleteScenarioMiddleware(updateInStorageStub);
+		deleteScenario(createRequestStub(featureId, scenarioId), createResponseStub(), checkResponse);
 
 		function checkResponse(){
-			deleteFromStorageStub.calledOnce.should.equal(true);
-			deleteFromStorageStub.args[0][0].should.deep.equal({id: scenarioId});
+			updateInStorageStub.calledOnce.should.equal(true);
+			updateInStorageStub.args[0][0].should.deep.equal({id: featureId, 'scenarios.id': scenarioId});
+			updateInStorageStub.args[0][1].should.deep.equal({$unset: {'scenarios.$': ''}});
 			done();
 		}
 
@@ -84,8 +86,8 @@ function createRequestStub(featureId, scenarioId) {
 }
 
 
-function createDeleteScenarioMiddleware(deleteFromStorageStub) {
-	mockery.registerMock('../storage/deleteFromStorage.js', deleteFromStorageStub);
+function createDeleteScenarioMiddleware(updateInStorageStub) {
+	mockery.registerMock('../storage/updateInStorage.js', updateInStorageStub);
 
 	mockery.enable({
 		useCleanCache: true,
