@@ -10,10 +10,10 @@ describe('Modify a scenario', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const updateInStorageStub = sinon.stub();
-		updateInStorageStub.returns(promise);
+		const updateScenarioInStorageStub = sinon.stub();
+		updateScenarioInStorageStub.returns(promise);
 
-		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub, () => {});
+		const modifyScenario = createModifyScenarioMiddleware(updateScenarioInStorageStub, () => {});
 		modifyScenario(createRequestStub('123'), createResponseStub(), done);
 
 		deferred.resolve();
@@ -23,28 +23,26 @@ describe('Modify a scenario', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const updateInStorageStub = sinon.stub();
-		updateInStorageStub.returns(promise);
+		const updateScenarioInStorageStub = sinon.stub();
+		updateScenarioInStorageStub.returns(promise);
 
 		const featureId = 'abc123';
-		const scenarioId = 'scen123';
+		const scenarioId = 0;
 		const dataToUpdate = {some: 'thing'};
 
 		const requestStub = createRequestStub(featureId, scenarioId, dataToUpdate);
 
-		const assembledDataToUpdateStub = sinon.stub();
-		assembledDataToUpdateStub.withArgs(scenarioId, requestStub).returns({transformed: 'data'});
-
-
-		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub, assembledDataToUpdateStub);
+		const modifyScenario = createModifyScenarioMiddleware(updateScenarioInStorageStub);
 		modifyScenario(requestStub, createResponseStub(), checkResponse);
 
 		deferred.resolve();
 
 		function checkResponse () {
-			updateInStorageStub.calledOnce.should.equal(true);
-			updateInStorageStub.args[0][0].should.deep.equal(scenarioId);
-			updateInStorageStub.args[0][1].should.deep.equal({transformed: 'data'});
+			updateScenarioInStorageStub.calledOnce.should.equal(true);
+
+			updateScenarioInStorageStub.args[0][0].should.equal(featureId);
+			updateScenarioInStorageStub.args[0][1].should.equal(scenarioId);
+			updateScenarioInStorageStub.args[0][2].should.deep.equal(dataToUpdate);
 			done();
 		}
 	});
@@ -53,14 +51,14 @@ describe('Modify a scenario', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const updateInStorageStub = sinon.stub();
-		updateInStorageStub.returns(promise);
+		const updateScenarioInStorageStub = sinon.stub();
+		updateScenarioInStorageStub.returns(promise);
 
 		const requestStub = createRequestStub('123', '432', {some: 'data'});
 		const responseStub = createResponseStub();
 		const responseSpy = sinon.spy(responseStub, 'json');
 
-		const modifyScenario = createModifyScenarioMiddleware(updateInStorageStub, () => {});
+		const modifyScenario = createModifyScenarioMiddleware(updateScenarioInStorageStub, () => {});
 		modifyScenario(requestStub, responseStub, checkResponse);
 
 		deferred.resolve();
@@ -95,9 +93,8 @@ function createRequestStub(featureId, scenarioId, bodyContent) {
 }
 
 
-function createModifyScenarioMiddleware(updateInStorageStub, assembledDataToUpdateStub) {
-	mockery.registerMock('./../../storage/updateInStorage.js', updateInStorageStub);
-	mockery.registerMock('./assembleScenarioToPersist', assembledDataToUpdateStub);
+function createModifyScenarioMiddleware(updateInStorageStub) {
+	mockery.registerMock('./updateScenarioInStorage.js', updateInStorageStub);
 
 	mockery.enable({
 		useCleanCache: true,

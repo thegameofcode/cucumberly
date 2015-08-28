@@ -3,7 +3,7 @@
 const _ = require('lodash');
 
 module.exports = () => {
-	this.Then(/^one of the scenarios is$/, function (scenarioDataTable, done) {
+	this.Then(/^one of the scenarios for feature "([^"]*)" is$/, (featureIdAlias, scenarioDataTable, done) => {
 		const expectedScenarioDataTableParsed = scenarioDataTable.hashes()[0];
 		const expectedScenarioData = {
 			name: expectedScenarioDataTableParsed.name,
@@ -15,11 +15,18 @@ module.exports = () => {
 			}
 		};
 
-		const obtainedScenarios = this.world.lastResponseBody.items;
+		const world = this.world;
+		const responseBody = world.lastResponseBody;
+
+		const featureId = world[featureIdAlias];
 
 		let foundScenario = false;
-		obtainedScenarios.forEach(scenario => {
-			if (_.isEqual(expectedScenarioData, scenario) && !foundScenario) foundScenario = true;
+		responseBody.items.forEach(feature => {
+			if(feature.id === featureId && feature.scenarios !== undefined) {
+				feature.scenarios.forEach(scenario => {
+					if (_.isEqual(expectedScenarioData, scenario) && !foundScenario) foundScenario = true;
+				});
+			}
 		});
 
 		foundScenario.should.equal(true);

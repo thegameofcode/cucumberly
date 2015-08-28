@@ -18,7 +18,7 @@ module.exports = () => {
         const obtainedBody = this.world.lastResponseBody;
 
         let foundFeature = false;
-        obtainedBody.forEach(obtainedFeature => {
+        obtainedBody.items.forEach(obtainedFeature => {
             delete obtainedFeature['_id'];
 			delete obtainedFeature['id'];
 

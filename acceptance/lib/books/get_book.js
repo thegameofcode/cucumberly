@@ -4,13 +4,14 @@ const request = require('request'),
 	should = require('chai').should(),
 	config = require('../../../src/config.js');
 
-module.exports = (world, featureId, callback) => {
+module.exports = (world, callback) => {
 	request({
-		uri: config.app.url + '/api/features/' + featureId + '/scenarios',
+		uri: config.app.url + '/api/book',
 		method: 'GET',
 		json: true
 	}, (err, response, body) => {
-		should.not.exist(err);
+		should.not.exist(err, err);
+
 		world.lastResponseBody = body;
 		world.lastResponseStatusCode = response.statusCode;
 		callback();

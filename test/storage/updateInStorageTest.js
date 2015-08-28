@@ -35,11 +35,11 @@ describe('Update in storage', () => {
 		const updateInStorage = createUpdateInStorage(collectionStub);
 
 		const documentID = '123';
-		const dataToUpdate = {a: 1, b: 2};
+		const queryToUpdate = {$set: {a: 1, b: 2}};
 
-		return updateInStorage(documentID, dataToUpdate).then(() => {
+		return updateInStorage({id: documentID}, queryToUpdate).then(() => {
 			usedElementToUpdate.should.deep.equal({id: documentID});
-			usedFieldsToUpdate.should.deep.equal({$set: dataToUpdate});
+			usedFieldsToUpdate.should.equal(queryToUpdate);
 		});
 	});
 

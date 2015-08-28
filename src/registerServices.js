@@ -1,7 +1,8 @@
 'use strict';
 
 const modules = [
-    require('./features')
+    require('./features'),
+    require('./books')
 ];
 
 module.exports = (server) => {

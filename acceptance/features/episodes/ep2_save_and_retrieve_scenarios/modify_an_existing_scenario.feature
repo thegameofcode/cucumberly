@@ -3,6 +3,7 @@ Feature: Save features
   As a $FRONT_END_APP
   I want to be able to modify it
 
+
   Scenario: Modify an existing scenario
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |
@@ -16,7 +17,7 @@ Feature: Save features
       | name          | given                                                         |
       | add 2 numbers | ["I have forgotten all about math", "I have entered 2 and 3"] |
     Then the response code is 200
-    When I ask cucumberly to give me my scenarios of feature "feature-id-alias-1"
-    And one of the scenarios is
+    And I ask cucumberly to give me my book of features
+    And one of the scenarios for feature "feature-id-alias-1" is
       | name          | description             | given                                                         | when                  | then                |
       | add 2 numbers | addition of two numbers | ["I have forgotten all about math", "I have entered 2 and 3"] | ["I press calculate"] | ["the result is 5"] |

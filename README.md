@@ -20,3 +20,7 @@ Make sure you have a mongodb instance running.
 npm run acceptance
 ```
 
+
+
+No scenarios dentro de features a nivel de features
+Quitar los _id

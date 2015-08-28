@@ -7,6 +7,7 @@
     "start": "node --harmony ./src/start.js",
     "jshint": "node --harmony node_modules/.bin/jshint ./src ./test ./features",
     "test": "node node_modules/.bin/mocha --harmony ./test/** ./test/**/**",
+    "integrationTests": "node node_modules/.bin/mocha --harmony integrationTests/",
     "acceptance": "node --harmony node_modules/.bin/cucumber.js acceptance/features -r ./acceptance/lib/step_definitions --tags ~@pending --format pretty",
     "coverage": "node --harmony node_modules/.bin/istambul.js ./test/** ./features/**"
   },

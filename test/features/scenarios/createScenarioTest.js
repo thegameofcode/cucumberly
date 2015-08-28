@@ -2,25 +2,22 @@
 
 const sinon = require('sinon'),
 	q = require('q'),
-	_ = require('lodash'),
 	mockery = require('mockery'),
 	should = require('chai').should();
 
 describe('Create scenario', () => {
 
-	const idsGeneratorStub = () => 'abc123';
-
 	it('Should call the next callback', done => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		let persistOnStorageStub = sinon.stub();
-		persistOnStorageStub.returns(promise);
+		let persistScenarioInStorage = sinon.stub();
+		persistScenarioInStorage.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub, () => {});
+		const createScenario = getCreateScenarioMiddleware(persistScenarioInStorage, () => {});
 		createScenario(mockRequest(), mockResponse(), done);
 
-		deferred.resolve();
+		deferred.resolve(6);
 	});
 
 	it('Should return 201 created', done => {
@@ -30,38 +27,37 @@ describe('Create scenario', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		let persistOnStorageStub = sinon.stub();
-		persistOnStorageStub.returns(promise);
+		let persistScenarioInStorage = sinon.stub();
+		persistScenarioInStorage.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub, () => {});
+		const createScenario = getCreateScenarioMiddleware(persistScenarioInStorage, () => {});
 		createScenario(mockRequest(), responseMock, checkResponse);
 
-		deferred.resolve();
+		deferred.resolve(1);
 		function checkResponse() {
 			responseSpy.args[0][0].should.equal(201);
 			done();
 		}
 	});
 
-	it('Should return an id property', done => {
+	it('Should return an id property of a fixed value 0 for now', done => {
 		const responseMock = mockResponse();
 		const responseSpy = sinon.spy(responseMock, 'json');
 
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		let persistOnStorageStub = sinon.stub();
-		persistOnStorageStub.returns(promise);
+		let persistScenarioInStorage = sinon.stub();
+		persistScenarioInStorage.returns(promise);
 
-		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub, () => {});
+		const createScenario = getCreateScenarioMiddleware(persistScenarioInStorage, () => {});
 		createScenario(mockRequest(), responseMock, checkResponse);
 
-		deferred.resolve();
+		deferred.resolve(3);
 
 		function checkResponse() {
 			const body = responseSpy.args[0][1];
-			should.exist(body.id);
-			body.id.should.equal(idsGeneratorStub());
+			body.should.deep.equal({id: 0});
 			done();
 		}
 	});
@@ -70,22 +66,22 @@ describe('Create scenario', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		let persistOnStorageStub = sinon.stub();
-		persistOnStorageStub.returns(promise);
+		let persistScenarioInStorage = sinon.stub();
+		persistScenarioInStorage.returns(promise);
 
 		const featureId = 'abc1234';
 		const mockedRequest = mockRequest(featureId);
-		const assembleScenarioToPersistStub = () => {return {some: 'thing'}};
 
-		const createScenario = getCreateScenarioMiddleware(idsGeneratorStub, persistOnStorageStub, assembleScenarioToPersistStub);
+		const createScenario = getCreateScenarioMiddleware(persistScenarioInStorage);
 		createScenario(mockedRequest, mockResponse(), checkResponse);
 
-		deferred.resolve();
+		deferred.resolve(2);
 
 		function checkResponse() {
-			persistOnStorageStub.calledOnce.should.equal(true);
+			persistScenarioInStorage.calledOnce.should.equal(true);
 
-			persistOnStorageStub.args[0][0].should.deep.equal({some: 'thing'});
+			persistScenarioInStorage.args[0][0].should.equal(featureId);
+			persistScenarioInStorage.args[0][1].should.equal(mockedRequest.body);
 			done();
 		}
 	});
@@ -97,10 +93,8 @@ describe('Create scenario', () => {
 });
 
 
-function getCreateScenarioMiddleware(idsMock, persistOnStorageStub, assembleScenarioToPersistStub) {
-	mockery.registerMock('../../idsGenerator/generateId.js', idsMock);
-	mockery.registerMock('../../storage/persistOnStorage.js', persistOnStorageStub);
-	mockery.registerMock('./assembleScenarioToPersist.js', assembleScenarioToPersistStub);
+function getCreateScenarioMiddleware(persistScenarioInStorage) {
+	mockery.registerMock('./persistScenarioInStorage.js', persistScenarioInStorage);
 
 	mockery.enable({
 		useCleanCache: true,

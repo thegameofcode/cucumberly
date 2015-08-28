@@ -1,6 +1,6 @@
 'use strict';
 
-const getScenarios = require('../../scenarios/get_scenarios.js');
+const getBook = require('../../books/get_book.js');
 
 module.exports = () => {
 	this.Then(/^the scenario with id "([^"]*)" from feature "([^"]*)" does not exist anymore$/, (scenarioIdAlias, featureIdAlias, done) => {
@@ -9,12 +9,18 @@ module.exports = () => {
 		const scenarioId = world[scenarioIdAlias];
 		const featureId = world[featureIdAlias];
 
-		getScenarios(world, featureId, () => {
+		getBook(world, () => {
 			const responseBody = world.lastResponseBody;
 			let foundScenario = false;
-			responseBody.items.forEach(scenario => {
-				if (scenario.id === scenarioId && !foundScenario) foundScenario = true;
+
+			responseBody.items.forEach(feature => {
+				if(feature.id === featureId && feature.scenarios !== undefined) {
+					feature.scenarios.forEach(scenario => {
+						if (scenario.id === scenarioId && !foundScenario) foundScenario = true;
+					});
+				}
 			});
+
 			foundScenario.should.equal(false);
 
 			done();

@@ -1,6 +1,6 @@
 'use strict';
 
-const getFeatures = require('../../features/get_features.js');
+const getBook = require('../../books/get_book.js');
 require('chai').should();
 
 module.exports = () => {
@@ -8,10 +8,10 @@ module.exports = () => {
 		const world = this.world;
 		const featureId = world[idAlias];
 
-		getFeatures(world, () => {
+		getBook(world, () => {
 			const responseBody = world.lastResponseBody;
 			let foundFeature = false;
-			responseBody.forEach(feature => {
+			responseBody.items.forEach(feature => {
 				if (feature.id === featureId && !foundFeature) foundFeature = true;
 			});
 			foundFeature.should.equal(false);
