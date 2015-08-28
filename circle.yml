@@ -7,6 +7,7 @@ test:
         background: true
     - npm run backdoor:
         background: true
+    - cp src/config_sample.json src/config.json
   override:
     - npm test
     - npm run integrationTests
