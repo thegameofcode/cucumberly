@@ -7,7 +7,7 @@ const request = require('request'),
 
 module.exports = (world, bookData, callback) => {
 	request({
-		uri: config.app.url + '/api/book',
+		uri: config.app.url + '/api/books',
 		method: 'POST',
 		json: true,
 		body: assembleBody(bookData)

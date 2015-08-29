@@ -6,7 +6,7 @@ const request = require('request'),
 
 module.exports = (world, callback) => {
 	request({
-		uri: config.app.url + '/api/book',
+		uri: config.app.url + '/api/books',
 		method: 'GET',
 		json: true
 	}, (err, response, body) => {
