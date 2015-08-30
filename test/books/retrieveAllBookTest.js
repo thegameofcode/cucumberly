@@ -6,7 +6,7 @@ const sinon = require('sinon'),
 	q = require('q');
 
 
-describe('Retrieve book', () => {
+describe('Retrieve all books', () => {
 	it('Should call the next function', done => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
@@ -15,9 +15,9 @@ describe('Retrieve book', () => {
 		retrieveFromStorageStub.returns(promise);
 
 		const retrieveBook = createRetrieveBook(retrieveFromStorageStub);
-		retrieveBook(createRequestStub(123), createResponseStub(), done);
+		retrieveBook(null, createResponseStub(), done);
 
-		deferred.resolve([{name: 'hi', id: 1, _id: 2}]);
+		deferred.resolve([{a: 1}, {b:2}]);
 	});
 
 	it('Should return a 200 OK response code', done => {
@@ -31,32 +31,29 @@ describe('Retrieve book', () => {
 		retrieveFromStorageStub.returns(promise);
 
 		const retrieveBook = createRetrieveBook(retrieveFromStorageStub);
-		retrieveBook(createRequestStub('123'), responseStub, checkResponse);
+		retrieveBook(null, responseStub, checkResponse);
 
 		function checkResponse () {
 			responseSpy.args[0][0].should.equal(200);
 			done();
 		}
 
-		deferred.resolve([{name: 'hi', id: 1, _id: 2}]);
+		deferred.resolve([{a: 1}, {b:2}]);
 	});
 
-	it('Should return the stored data for this book', done => {
+	it('Should return the stored data for all books', done => {
 		const responseStub = createResponseStub();
 		const responseSpy = sinon.spy(responseStub, 'json');
-
-		const bookId = 'abc1234';
-		const requestStub = createRequestStub(bookId);
 
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const storageResponse = [{name: 'hi', id: 1, _id: 2}];
+		const storageResponse = [{a: 1}, {b: 2}];
 		const retrieveFromStorageStub = sinon.stub();
-		retrieveFromStorageStub.withArgs({id: bookId}).returns(promise);
+		retrieveFromStorageStub.returns(promise);
 
 		const retrieveBook = createRetrieveBook(retrieveFromStorageStub);
-		retrieveBook(requestStub, responseStub, checkResponse);
+		retrieveBook(null, responseStub, checkResponse);
 
 		deferred.resolve(storageResponse);
 
@@ -64,9 +61,7 @@ describe('Retrieve book', () => {
 			responseSpy.args[0][0].should.equal(200);
 
 			const body = responseSpy.args[0][1];
-			body.should.deep.equal({name: 'hi'});
-			should.not.exist(body.id);
-			should.not.exist(body._id);
+			body.items.should.deep.equal([{a: 1}, {b:2}]);
 			done();
 		}
 	});
@@ -82,10 +77,6 @@ function createResponseStub() {
 	return { json: () => {} };
 }
 
-function createRequestStub(bookId) {
-	return {context: {bookId: bookId}};
-}
-
 function createRetrieveBook(retrieveFromStorageStub) {
 	mockery.registerMock('./../storage/retrieveFromStorage.js', retrieveFromStorageStub);
 
@@ -95,5 +86,5 @@ function createRetrieveBook(retrieveFromStorageStub) {
 		warnOnUnregistered: false
 	});
 
-	return require('../../src/books/retrieveBook.js');
+	return require('../../src/books/retrieveAllBooks.js');
 }

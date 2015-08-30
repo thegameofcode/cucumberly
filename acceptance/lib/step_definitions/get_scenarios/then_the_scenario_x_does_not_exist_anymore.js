@@ -1,6 +1,6 @@
 'use strict';
 
-const getBook = require('../../books/get_book.js'),
+const getBook = require('../../books/get_books.js'),
 	_ = require('lodash');
 
 module.exports = () => {
