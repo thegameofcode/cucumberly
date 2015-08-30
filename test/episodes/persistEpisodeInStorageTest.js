@@ -5,26 +5,26 @@ const sinon = require('sinon'),
 	mockery = require('mockery'),
 	should = require('chai').should();
 
-describe('Persist scenario in storage', () => {
+describe('Persist episode in storage', () => {
 
-	it('Should persist new scenarios as part of features', done => {
+	it('Should persist new episodes as part of a book', done => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
 		let updateInStorageStub = sinon.stub();
 		updateInStorageStub.returns(promise);
 
-		const persistScenarioInStorage = createPersistScenarioInStorage(updateInStorageStub);
+		const persistEpisodeInStorage = createPersistEpisodeInStorage(updateInStorageStub);
 
-		const scenarioBody = {
+		const episodeBody = {
 			name: 'some name',
 			steps: 1
 		};
-		persistScenarioInStorage('abc123', scenarioBody).then(() => {
+		persistEpisodeInStorage('abc123', episodeBody).then(() => {
 			updateInStorageStub.calledOnce.should.equal(true);
 
 			updateInStorageStub.args[0][0].should.deep.equal({id: 'abc123'});
-			updateInStorageStub.args[0][1].should.deep.equal({$push: {'scenarios': scenarioBody}});
+			updateInStorageStub.args[0][1].should.deep.equal({$push: {'episodes': episodeBody}});
 			done();
 		});
 
@@ -38,7 +38,7 @@ describe('Persist scenario in storage', () => {
 });
 
 
-function createPersistScenarioInStorage(updateInStorage) {
+function createPersistEpisodeInStorage(updateInStorage) {
 	mockery.registerMock('../storage/updateInStorage.js', updateInStorage);
 
 	mockery.enable({
@@ -47,5 +47,5 @@ function createPersistScenarioInStorage(updateInStorage) {
 		warnOnUnregistered: false
 	});
 
-	return require('../../src/scenarios/persistScenarioInStorage.js');
+	return require('../../src/episodes/persistEpisodeInStorage.js');
 }

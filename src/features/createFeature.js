@@ -15,9 +15,7 @@ module.exports = (request, response, next) => {
 };
 
 function assembleResponseBody(featureId){
-    return {
-        id: featureId
-    }
+    return { id: featureId };
 }
 
 function assembleDocumentToPersist(featureId, request) {
