@@ -5,9 +5,9 @@ const request = require('request'),
     config = require('../../../src/config.js');
 
 
-module.exports = (world, featureData, callback) => {
+module.exports = (world, bookId, episodeId, featureData, callback) => {
     request({
-        uri: config.app.url + '/api/features',
+        uri: config.app.url + '/api/books/' + bookId + '/episodes/' + episodeId + '/features',
         method: 'POST',
         json: true,
         body: assembleBody(featureData)

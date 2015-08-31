@@ -3,6 +3,7 @@ Feature: Retrieve features
   As a $FRONT_END_APP
   I want to be able to retrieve my saved features
 
+  @pending
   Scenario: Retrieve a saved feature
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |

@@ -3,6 +3,7 @@ Feature: Save features
   As a $FRONT_END_APP
   I want to be able to modify it
 
+  @pending
   Scenario: Modify an existing feature
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |

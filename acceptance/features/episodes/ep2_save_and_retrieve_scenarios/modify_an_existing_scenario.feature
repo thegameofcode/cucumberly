@@ -4,6 +4,7 @@ Feature: Save features
   I want to be able to modify it
 
 
+  @pending
   Scenario: Modify an existing scenario
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |

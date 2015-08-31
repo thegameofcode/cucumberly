@@ -5,7 +5,7 @@ const createFeature = require('./createFeature.js'),
 	deleteFeature = require('./deleteFeature.js');
 
 module.exports = server => {
-    server.post('/api/features', createFeature);
+    server.post('/api/books/:bookId/episodes/:episodeId/features', createFeature);
 	server.put('/api/features/:featureId', modifyAFeature);
 	server.del('/api/features/:featureId', deleteFeature);
 };

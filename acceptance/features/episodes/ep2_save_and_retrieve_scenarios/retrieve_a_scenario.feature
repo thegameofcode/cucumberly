@@ -3,6 +3,7 @@ Feature: Retrieve scenario
   As a $FRONT_END_APP
   I want to be able to retrieve my saved scenarios
 
+  @pending
   Scenario: Retrieve a saved scenario
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |

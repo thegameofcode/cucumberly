@@ -3,6 +3,7 @@ Feature: Save scenario
   As a $FRONT_END_APP
   I want to be able to save the changes I make
 
+  @pending
   Scenario: Save a new scenario
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |
@@ -15,6 +16,7 @@ Feature: Save scenario
     Then the response code is 201
     And the body has a "id" field
 
+  @pending
   Scenario: Save a new scenario with more than one 'given' step
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |
@@ -27,6 +29,7 @@ Feature: Save scenario
     Then the response code is 201
     And the body has a "id" field
 
+  @pending
   Scenario: Save a new scenario with more than one 'when' step
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |
@@ -39,6 +42,7 @@ Feature: Save scenario
     Then the response code is 201
     And the body has a "id" field
 
+  @pending
   Scenario: Save a new scenario with more than one 'then' step
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |

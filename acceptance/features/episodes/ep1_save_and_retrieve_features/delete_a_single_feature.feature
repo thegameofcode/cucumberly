@@ -3,6 +3,7 @@ Feature: Delete a single feature
   As a $FRONT_END_APP
   I want to be able to delete my features
 
+  @pending
   Scenario: Delete a saved feature
     Given $FRONT_END_APP has saved the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |
