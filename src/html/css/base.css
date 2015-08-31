@@ -1,0 +1,18 @@
+
+input.editableLabel:hover{
+    background: #d4eafd;
+}
+
+input.editableLabel:focus{
+    background: #d4eafd;
+}
+
+.editableLabel {
+    border: 0;
+    background: none;
+    width: 60%;
+}
+
+.editableLabel.defaultVal {
+    border-bottom: 2px dotted #aaa;
+}
