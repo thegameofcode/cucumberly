@@ -1,6 +1,8 @@
 Cucumberly
 ==========
 
+[![Circle CI](https://circleci.com/gh/thegameofcode/cucumberly.svg?style=svg)](https://circleci.com/gh/thegameofcode/cucumberly)
+
 Cucumberly is a cucumber features editor but for "Muggles".
 
 ### Run
@@ -19,4 +21,3 @@ Make sure you have a mongodb instance running.
 ```
 npm run acceptance
 ```
-

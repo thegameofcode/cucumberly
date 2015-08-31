@@ -18,8 +18,8 @@ module.exports = () => {
 		const obtainedScenarios = this.world.lastResponseBody.items;
 
 		let foundScenario = false;
-		obtainedScenarios.forEach(obtainedFeature => {
-			if (_.isEqual(expectedScenarioData, obtainedFeature) && !foundScenario) foundScenario = true;
+		obtainedScenarios.forEach(scenario => {
+			if (_.isEqual(expectedScenarioData, scenario) && !foundScenario) foundScenario = true;
 		});
 
 		foundScenario.should.equal(true);

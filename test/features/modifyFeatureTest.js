@@ -10,10 +10,10 @@ describe('Modify feature', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const updateInStorageStub = sinon.stub();
-		updateInStorageStub.returns(promise);
+		const updateFeatureInStorageStub = sinon.stub();
+		updateFeatureInStorageStub.returns(promise);
 
-		const modifyFeatureMiddleware = createModifyFeatureMiddleware(updateInStorageStub);
+		const modifyFeatureMiddleware = createModifyFeatureMiddleware(updateFeatureInStorageStub);
 		modifyFeatureMiddleware(createRequestStub('123'), createResponseStub(), done);
 
 		deferred.resolve();
@@ -23,22 +23,22 @@ describe('Modify feature', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const updateInStorageStub = sinon.stub();
-		updateInStorageStub.returns(promise);
+		const updateFeatureInStorageStub = sinon.stub();
+		updateFeatureInStorageStub.returns(promise);
 
 		const featureId = 'abc123';
 		const dataToUpdate = {some: 'thing'};
 		const requestStub = createRequestStub(featureId, dataToUpdate);
 
-		const modifyFeatureMiddleware = createModifyFeatureMiddleware(updateInStorageStub);
+		const modifyFeatureMiddleware = createModifyFeatureMiddleware(updateFeatureInStorageStub);
 		modifyFeatureMiddleware(requestStub, createResponseStub(), checkResponse);
 
 		deferred.resolve();
 
 		function checkResponse () {
-			updateInStorageStub.calledOnce.should.equal(true);
-			updateInStorageStub.args[0][0].should.equal(featureId);
-			updateInStorageStub.args[0][1].should.deep.equal(dataToUpdate);
+			updateFeatureInStorageStub.calledOnce.should.equal(true);
+			updateFeatureInStorageStub.args[0][0].should.equal(featureId);
+			updateFeatureInStorageStub.args[0][1].should.deep.equal(dataToUpdate);
 			done();
 		}
 	});
@@ -47,14 +47,14 @@ describe('Modify feature', () => {
 		let deferred = q.defer();
 		let promise = deferred.promise;
 
-		const updateInStorageStub = sinon.stub();
-		updateInStorageStub.returns(promise);
+		const updateFeatureInStorageStub = sinon.stub();
+		updateFeatureInStorageStub.returns(promise);
 
 		const requestStub = createRequestStub('123', {some: 'data'});
 		const responseStub = createResponseStub();
 		const responseSpy = sinon.spy(responseStub, 'json');
 
-		const modifyFeatureMiddleware = createModifyFeatureMiddleware(updateInStorageStub);
+		const modifyFeatureMiddleware = createModifyFeatureMiddleware(updateFeatureInStorageStub);
 		modifyFeatureMiddleware(requestStub, responseStub, checkResponse);
 
 		deferred.resolve();
@@ -86,8 +86,8 @@ function createRequestStub(id, bodyContent) {
 	};
 }
 
-function createModifyFeatureMiddleware(updateInStorageStub) {
-	mockery.registerMock('../storage/updateInStorage.js', updateInStorageStub);
+function createModifyFeatureMiddleware(updateFeatureInStorageStub) {
+	mockery.registerMock('./updateFeatureInStorage.js', updateFeatureInStorageStub);
 
 	mockery.enable({
 		useCleanCache: true,

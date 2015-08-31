@@ -1,0 +1,14 @@
+machine:
+  node:
+    version: 0.12.7
+test:
+  pre:
+    - cp src/config_sample.json src/config.json
+    - npm start:
+        background: true
+    - npm run backdoor:
+        background: true
+  override:
+    - npm test
+    - npm run integrationTests
+    - npm run acceptance
