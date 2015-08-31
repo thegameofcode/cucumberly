@@ -13,7 +13,7 @@ Feature: Save features
       | The empire strikes back |
     And the episode has the id "episode-1"
 
-  @now
+
   Scenario: Save a new feature
     Given $FRONT_END_APP has created the following new feature
       | name     | beneficiary | motivation           | expected behaviour                |

@@ -13,10 +13,10 @@ describe('Create feature', () => {
     it('Should call the next callback', done => {
         let deferred = q.defer();
         let promise = deferred.promise;
-        let persistOnStorageStub = sinon.stub();
-        persistOnStorageStub.returns(promise);
+        let persistFeatureOnStorageStub = sinon.stub();
+        persistFeatureOnStorageStub.returns(promise);
 
-        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistOnStorageStub);
+        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistFeatureOnStorageStub);
 
         deferred.resolve();
         createFeature(mockRequest(), createResponseStub(), done);
@@ -28,10 +28,10 @@ describe('Create feature', () => {
 
         let deferred = q.defer();
         let promise = deferred.promise;
-        let persistOnStorageStub = sinon.stub();
-        persistOnStorageStub.returns(promise);
+        let persistFeatureOnStorageStub = sinon.stub();
+        persistFeatureOnStorageStub.returns(promise);
 
-        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistOnStorageStub);
+        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistFeatureOnStorageStub);
         createFeature(mockRequest(), responseStub, checkResponse);
 
         deferred.resolve();
@@ -47,13 +47,13 @@ describe('Create feature', () => {
 
         let deferred = q.defer();
         let promise = deferred.promise;
-        let persistOnStorageStub = sinon.stub();
-        persistOnStorageStub.returns(promise);
+        let persistFeatureOnStorageStub = sinon.stub();
+        persistFeatureOnStorageStub.returns(promise);
 
         const idsGeneratorStub = sinon.stub();
         idsGeneratorStub.returns('abc123');
 
-        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistOnStorageStub);
+        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistFeatureOnStorageStub);
         createFeature(mockRequest(), responseStub, checkResponse);
 
         deferred.resolve();
@@ -69,21 +69,23 @@ describe('Create feature', () => {
         let deferred = q.defer();
         let promise = deferred.promise;
 
-        let persistOnStorageStub = sinon.stub();
-        persistOnStorageStub.returns(promise);
-        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistOnStorageStub);
+        let persistFeatureOnStorageStub = sinon.stub();
+        persistFeatureOnStorageStub.returns(promise);
+        const createFeature = getCreateFeatureMiddleware(idsGeneratorStub, persistFeatureOnStorageStub);
 
-        const mockedRequest = mockRequest();
-        createFeature(mockedRequest, createResponseStub(), checkResponse);
+		const bookId = 'bookId1';
+		const episodeId = 'episodeId1';
+		const mockedRequest = mockRequest(bookId, episodeId);
+		createFeature(mockedRequest, createResponseStub(), checkResponse);
 
         deferred.resolve();
         function checkResponse() {
-            persistOnStorageStub.calledOnce.should.equal(true);
+            persistFeatureOnStorageStub.calledOnce.should.equal(true);
 
-            const elementsToPersist = persistOnStorageStub.args[0][0];
-            const expectedPersistedElements = _.assign(mockedRequest.body, {id: idsGeneratorStub()});
-
-            elementsToPersist.should.deep.equal(expectedPersistedElements);
+			persistFeatureOnStorageStub.args[0][0].should.equal(bookId);
+			persistFeatureOnStorageStub.args[0][1].should.equal(episodeId);
+			persistFeatureOnStorageStub.args[0][2].should.equal(idsGeneratorStub());
+			persistFeatureOnStorageStub.args[0][3].should.deep.equal(mockedRequest.body);
             done();
         }
     });
@@ -111,9 +113,9 @@ describe('Create feature', () => {
     });
 });
 
-function getCreateFeatureMiddleware(idsMock, persistOnStorageStub) {
+function getCreateFeatureMiddleware(idsMock, persistFeatureOnStorageStub) {
     mockery.registerMock('../idsGenerator/generateId.js', idsMock);
-    mockery.registerMock('../storage/persistOnStorage.js', persistOnStorageStub);
+    mockery.registerMock('./persistFeatureOnStorage.js', persistFeatureOnStorageStub);
 
     mockery.enable({
         useCleanCache: true,
@@ -130,8 +132,12 @@ function createResponseStub() {
     }
 }
 
-function mockRequest() {
+function mockRequest(bookId, episodeId) {
     return {
+		context: {
+			bookId: bookId,
+			episodeId: episodeId
+		},
         body: {
             name: 'some name',
             b: 2

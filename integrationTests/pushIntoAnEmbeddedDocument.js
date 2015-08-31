@@ -175,6 +175,56 @@ describe('Push into an embedded document', () => {
 	});
 
 
+	it('Persist new scenarios as part of books and episodes', done => {
+		const documentToSave = {
+			id: 'book-123',
+			episodes: [
+				{
+					name: 'first scenario',
+					id: 'episode-123',
+					features: [
+						{a: 1}
+					]
+				}
+			]
+		};
+
+		const findElementQuery = {id: 'book-123', 'episodes.id': 'episode-123'};
+		const updateQuery = {$push: {'episodes.$.features': {b: 2}}};
+
+
+		const expectedUpdatedDocument = {
+			id: 'book-123',
+			episodes: [
+				{
+					name: 'first scenario',
+					id: 'episode-123',
+					features: [
+						{a: 1},
+						{b: 2}
+					]
+				}
+			]
+		};
+
+		persistOnStorage(documentToSave)
+			.then(() => updateInStorage(findElementQuery, updateQuery))
+			.then(() => retrieveFromStorage({id: 'book-123'}))
+			.then(retrievedDocuments => {
+				should.exist(retrievedDocuments[0]);
+
+				delete retrievedDocuments[0]._id;
+				retrievedDocuments[0].should.deep.equal(expectedUpdatedDocument);
+				done()
+			})
+			.catch(err => {
+				done(err);
+			});
+
+
+	});
+
+
 	afterEach(done => {
 		deleteFromStorage({}).then(done);
 	});

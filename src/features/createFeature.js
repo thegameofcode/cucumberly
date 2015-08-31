@@ -2,13 +2,13 @@
 
 const generateId = require('../idsGenerator/generateId.js'),
 	_ = require('lodash'),
-    persistOnStorage = require('../storage/persistOnStorage.js');
+    persistFeatureOnStorage = require('./persistFeatureOnStorage.js');
 
 module.exports = (request, response, next) => {
     if (request.body.name === undefined) {response.json(409, {error: 'missing name'}); return next()}
 
 	const featureId = generateId();
-    persistOnStorage(assembleDocumentToPersist(featureId, request)).then(() => {
+    persistFeatureOnStorage(request.context.bookId, request.context.episodeId, featureId, request.body).then(() => {
         response.json(201, assembleResponseBody(featureId));
         return next();
     });
@@ -16,8 +16,4 @@ module.exports = (request, response, next) => {
 
 function assembleResponseBody(featureId){
     return { id: featureId };
-}
-
-function assembleDocumentToPersist(featureId, request) {
-	return _.assign({id: featureId}, request.body);
 }
