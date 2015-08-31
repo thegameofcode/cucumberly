@@ -10,7 +10,7 @@ iris.ui(function (self) {
 		self.get('accordionBody').attr('id', id);
 		self.get('accordionItem').attr('data-target', '#' + id);
 
-		self.ui('episodeName', iris.path.ui.editableLabel.js, {defaultText: 'Episode Name'}).on('change', onEpisodeChange);
+		self.ui('episodeName', iris.path.ui.editableLabel.js, {defaultText: 'New episode'}).on('change', onEpisodeChange);
 
 		var episode = self.setting('episode');
 		self.ui('episodeName').text(episode.name);
@@ -29,8 +29,8 @@ iris.ui(function (self) {
 	};
 
 	function onBtnAddFeatureClick() {
-		var name = 'New Feature';
-		book.createFeature(self.setting('episode').id, {name: name}, function(err, feature) {
+		var name = 'New feature';
+		book.createFeature(self.setting('episode').id, {name: name, description:{motivation: 'Motivation', beneficiary: 'Beneficiary', expectedBehaviour: 'Expected behaviour'}}, function(err, feature) {
 			if (err) return alert(err);
 			var episode = self.setting('episode');
 			var featureUrl = '#/episode/' + episode.id + '/feature/' + feature.id;

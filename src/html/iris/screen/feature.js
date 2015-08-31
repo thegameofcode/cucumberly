@@ -8,7 +8,7 @@ iris.ui(function (self) {
 
 		self.get('btnAddScenario').on('click', addScenario);
 
-		self.ui('featureName', iris.path.ui.editableLabel.js, {defaultText: 'Feature Name'});
+		self.ui('featureName', iris.path.ui.editableLabel.js, {defaultText: 'New feature'});
 		self.ui('featureMotivation', iris.path.ui.editableLabel.js, {defaultText: 'Motivation'});
 		self.ui('featureBeneficiary', iris.path.ui.editableLabel.js, {defaultText: 'Beneficiary'});
 		self.ui('featureExpectedBehaviour', iris.path.ui.editableLabel.js, {defaultText: 'Expected behaviour'});
