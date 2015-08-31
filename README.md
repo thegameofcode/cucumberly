@@ -2,6 +2,7 @@ Cucumberly
 ==========
 
 [![Circle CI](https://circleci.com/gh/thegameofcode/cucumberly.svg?style=svg)](https://circleci.com/gh/thegameofcode/cucumberly)
+[![Coverage Status](https://coveralls.io/repos/thegameofcode/cucumberly/badge.svg?branch=master&service=github)](https://coveralls.io/github/thegameofcode/cucumberly?branch=master)
 
 Cucumberly is a cucumber features editor but for "Muggles".
 

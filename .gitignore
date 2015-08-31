@@ -5,3 +5,4 @@ node_modules
 npm-debug.log
 coverage
 src/config.json
+coverage-mocha

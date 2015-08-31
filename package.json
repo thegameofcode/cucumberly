@@ -9,7 +9,9 @@
     "test": "node node_modules/.bin/mocha --harmony ./test/** ./test/**/**",
     "integrationTests": "node node_modules/.bin/mocha --harmony integrationTests/",
     "acceptance": "node --harmony node_modules/.bin/cucumber.js acceptance/features -r ./acceptance/lib/step_definitions --tags ~@pending --format pretty",
-    "coverage": "node --harmony node_modules/.bin/istambul.js ./test/** ./features/**"
+    "coverage-run-tests": "node --harmony node_modules/.bin/istanbul cover node_modules/.bin/_mocha --harmony ./test/** ./test/**/**  --dir ./coverage-mocha -- -R spec > /dev/null",
+    "coverange-update-in-coveralls": "cat ./coverage-mocha/lcov.info | ./node_modules/coveralls/bin/coveralls.js"
+
   },
   "repository": {
     "type": "git",
@@ -19,22 +21,24 @@
   "contributors": [],
   "license": "MIT",
   "devDependencies": {
-    "chai": "^3.2.0",
-    "cucumber": "^0.5.2",
-    "istanbul": "^0.3.18",
-    "jshint": "^2.8.0",
-    "lodash": "^3.10.1",
-    "mocha": "^2.2.5",
-    "mockery": "^1.4.0",
-    "sinon": "^1.16.1"
+    "chai": "3.2.0",
+    "cucumber": "0.5.2",
+    "istanbul": "0.3.18",
+    "jshint": "2.8.0",
+    "lodash": "3.10.1",
+    "mocha": "2.2.5",
+    "mockery": "1.4.0",
+    "sinon": "1.16.1",
+    "istanbul": "0.3.19",
+    "coveralls": "2.11.4"
   },
   "dependencies": {
-    "bunyan": "^1.4.0",
-    "mongodb": "^2.0.42",
-    "q": "^1.4.1",
-    "request": "^2.61.0",
-    "restify": "^4.0.0",
-    "uuid": "^2.0.1"
+    "bunyan": "1.4.0",
+    "mongodb": "2.0.42",
+    "q": "1.4.1",
+    "request": "2.61.0",
+    "restify": "4.0.0",
+    "uuid": "2.0.1"
   },
   "jshintConfig": {
     "esnext": true,

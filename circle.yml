@@ -9,6 +9,8 @@ test:
     - npm run backdoor:
         background: true
   override:
-    - npm test
+    - npm run coverage-run-tests
     - npm run integrationTests
     - npm run acceptance
+  post:
+    - npm run coverange-update-in-coveralls
