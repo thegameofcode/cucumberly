@@ -68,13 +68,12 @@ iris.ui(function (self) {
 	}
 
 	function onStepChange() {
-		// TODO call to resource save scenario
 		self.get('infoSaved').toggleClass('hidden', true);
 		self.get('infoSaving').toggleClass('hidden', false).fadeIn();
 
-		var episodeId;
-		var featureId;
-		var scenarioId;
+		var episodeId = self.setting('episodeId');
+		var featureId = self.setting('featureId');
+		var scenarioId = self.setting('scenario').id;
 		book.updateScenario(episodeId, featureId, scenarioId, data(), function(err, result) {
 			if (err) return alert(err);
 			self.get('infoSaving').toggleClass('hidden', true);

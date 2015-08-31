@@ -1,21 +1,11 @@
 iris.resource(function (self) {
 	"use strict";
 
-	var db = new Nedb();
+	var db = new Nedb({filename: 'cucumberly', autoload: true});
 
 	//
 	// Book
 	//
-
-	function generateId() {
-		var text = "";
-		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-		for( var i=0; i < 5; i++ )
-			text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-		return text;
-	}
 
 	self.loadBook = function(callback) {
 		db.findOne({}, function(err, book) {
@@ -25,60 +15,21 @@ iris.resource(function (self) {
 				callback(null, book);
 			} else {
 				console.log('Book not found, creating...');
-				var defaultBook = {title: 'Book Title', description: 'Book Description', episodes: []};
-				db.insert(defaultBook, function(err) {
+				var defaultBook = {id: generateId(), title: '', description: '', episodes: []};
+				db.insert(defaultBook, function(err, book) {
 					if (err) return callback(err);
-					callback(null, defaultBook);
+					callback(null, book);
 				});
 			}
 		});
-
-		/*setTimeout(function() {
-			callback(null, {
-				"title": "Nextinit",
-				"description": "Book of features",
-				"episodes": [
-					{
-						"id": "Episode1",
-						"name": "Login",
-						"features": [
-							{
-								"id": "feature1_1",
-								"name": "Login with Chatter",
-								"description": {
-									"motivation": "use Nextinit features",
-									"beneficiary": "a customer",
-									"expectedBehaviour": "to log into Nextinit using an existing Chatter account"
-								},
-								"scenarios": [
-									{
-										"name": "TAYLOR logs into Nextinit using his Chatter account",
-										"steps": {
-											"given": [
-												"TAYLOR has a Chatter account"
-											],
-											"when": [
-												"TAYLOR logs into Nextinit with his Chatter account"
-											],
-											"then": [
-												"TAYLOR is logged in",
-												"the dashboard is displayed"
-											]
-										}
-									}
-								]
-							}
-						]
-					}
-				]
-			});
-		}, 1000);*/
 	};
 
 	self.updateBook = function(data, callback) {
-		setTimeout(function() {
-			callback(null, {});
-		}, 1000);
+		db.update({}, {$set: {title: data.title, description: data.description}}, function(err, numReplaced) {
+			if (err) return callback(err);
+			if (numReplaced != 1) return callback(new Error('Error updating book data'));
+			callback();
+		});
 	};
 
 	//
@@ -86,12 +37,6 @@ iris.resource(function (self) {
 	//
 
 	self.createEpisode = function(data, callback) {
-		/*setTimeout(function() {
-			callback(null, {
-				"id": "episode_123"
-			});
-		}, 1000);*/
-
 		db.findOne({}, function(err, book) {
 			if (err) return callback(err);
 			if (!book)  return callback(new Error('Book not found'));
@@ -106,15 +51,33 @@ iris.resource(function (self) {
 	};
 
 	self.updateEpisode = function(episodeId, data, callback) {
-		setTimeout(function() {
-			callback(null, {});
-		}, 1000);
+		getEpisode(episodeId, function(err, book, episode) {
+			if (err) return callback(err);
+
+			var newFeature = {id: generateId(), name: data.name, description: data.description};
+			episode.features.push(newFeature);
+
+			db.update({}, book, function(err, numReplaced) {
+				if (err) return callback(err);
+				if (numReplaced !== 1) return callback(new Error('Error updating book'));
+				callback(null, newFeature);
+			});
+		});
 	};
 
 	self.removeEpisode = function(episodeId, callback) {
-		setTimeout(function() {
-			callback(null, {});
-		}, 1000);
+		db.findOne({}, function(err, book) {
+			if (err) return callback(err);
+			if (!book)  return callback(new Error('Book not found'));
+
+			book.episodes = _.remove(book.episodes, {id: episodeId});
+
+			db.update({}, book, function(err, numReplaced) {
+				if (err) return callback(err);
+				if (numReplaced !== 1) return callback(new Error('Error updating book'));
+				callback(null);
+			});
+		});
 	};
 
 	//
@@ -122,62 +85,54 @@ iris.resource(function (self) {
 	//
 
 	self.getFeature = function(episodeId, featureId, callback) {
-		self.loadBook(function(err, book) {
+		getFeature(episodeId, featureId, function(err, book, feature) {
 			if (err) return callback(err);
-			var episode = _.find(book.episodes, {id: episodeId});
-
-			var feature;
-			if (episode) {
-				feature = _.find(episode.features, {id: featureId});
-			}
-
 			callback(null, feature);
 		});
 	};
 
 	self.createFeature = function(episodeId, data, callback) {
-		/*setTimeout(function() {
-			callback(null, {
-				"id": "feature_123"
-			});
-		}, 1000);*/
-
-		db.findOne({}, function(err, book) {
+		getEpisode(episodeId, function(err, book, episode) {
 			if (err) return callback(err);
-			if (!book)  return callback(new Error('Book not found'));
 
-			var episodeDb = book.episodes.filter(function(episode) { return episode.id === episodeId; })[0];
-			if (!episodeDb) return callback(new Error('Episode not found'));
+			var newFeature = {id: generateId(), name: data.name, description: data.description, scenarios: []};
+			episode.features.push(newFeature);
 
-			var newFeature = {id: generateId(), name: data.name, description: data.description};
-			episodeDb.features.push(newFeature);
 			db.update({}, book, function(err, numReplaced) {
 				if (err) return callback(err);
 				if (numReplaced !== 1) return callback(new Error('Error updating book'));
 				callback(null, newFeature);
 			});
-
-
-			/* Doent work :(
-			db.update({'episodes.id': episodeId}, {$push:{'episodes.$.features': newFeature}}, function(err, numReplaced) {
-				if (err) return callback(err);
-				if (numReplaced !== 1) return callback(new Error('Error updating book'));
-				db.findOne({}, function(err, book) {console.log('b', book)})
-				callback(null, newFeature);
-			});*/
 		});
 	};
 
 	self.updateFeature = function(episodeId, featureId, data, callback) {
-		setTimeout(function() {
-			callback(null, {});
-		}, 1000);
+		getFeature(episodeId, featureId, function(err, book, feature) {
+			if (err) return callback(err);
+
+			feature.name = data.name;
+			feature.description = data.description;
+
+			db.update({}, book, function(err, numReplaced) {
+				if (err) return callback(err);
+				if (numReplaced !== 1) return callback(new Error('Error updating book'));
+				callback(null, feature);
+			});
+		});
 	};
 
 	self.removeFeature = function(episodeId, featureId, callback) {
-		setTimeout(function() {
-			callback(null, {});
-		}, 1000);
+		getEpisode(episodeId, function(err, book, episode) {
+			if (err) return callback(err);
+
+			episode.features = _.remove(episode.features, {id: featureId});
+
+			db.update({}, book, function(err, numReplaced) {
+				if (err) return callback(err);
+				if (numReplaced !== 1) return callback(new Error('Error updating book'));
+				callback(null);
+			});
+		});
 	};
 
 
@@ -186,63 +141,86 @@ iris.resource(function (self) {
 	//
 
 	self.createScenario = function(episodeId, featureId, data, callback) {
-		/*setTimeout(function() {
-			callback(null, {
-				"id": "scenario_123"
-			});
-		}, 1000);*/
-
-		db.findOne({}, function(err, book) {
+		getFeature(episodeId, featureId, function(err, book, feature) {
 			if (err) return callback(err);
-			if (!book)  return callback(new Error('Book not found'));
-
-			var episodeDb = book.episodes.filter(function(episode) { return episode.id === episodeId; })[0];
-			if (!episodeDb) return callback(new Error('Episode not found'));
-
-			var featureDb = episodeDb.features.filter(function(feature) { return feature.id === featureId; })[0];
-			if (!featureDb) return callback(new Error('Feature not found'));
 
 			var newScenario = {id: generateId(), name: data.name, steps: data.steps};
-			featureDb.scenarios.push(newScenario);
+			feature.scenarios.push(newScenario);
 			db.update({}, book, function(err, numReplaced) {
 				if (err) return callback(err);
 				if (numReplaced !== 1) return callback(new Error('Error updating book'));
-				callback(null, newFeature);
+				callback(null, newScenario);
 			});
 		});
 	};
 
 	self.updateScenario = function(episodeId, featureId, scenarioId, data, callback) {
-		setTimeout(function() {
-			callback(null, {});
-		}, 1000);
-
-		/*db.findOne({}, function(err, book) {
+		getFeature(episodeId, featureId, function(err, book, feature) {
 			if (err) return callback(err);
-			if (!book)  return callback(new Error('Book not found'));
 
-			var episodeDb = book.episodes.filter(function(episode) { return episode.id === episodeId; })[0];
-			if (!episodeDb) return callback(new Error('Episode not found'));
+			var scenario = _.find(feature.scenarios, {id: scenarioId});
+			if (!scenario) return callback(new Error('Scenario not found'));
 
-			var featureDb = episodeDb.features.filter(function(feature) { return feature.id === featureId; })[0];
-			if (!featureDb) return callback(new Error('Feature not found'));
+			scenario.name = data.name;
+			scenario.steps = data.steps;
 
-			var scenarioDb = featureDb.scenarios.filter(function(scenario) { return scenario.id === scenarioId; })[0];
-			if (!scenarioDb) return callback(new Error('Scenario not found'));
-
-			scenarioDb = data;
 			db.update({}, book, function(err, numReplaced) {
 				if (err) return callback(err);
 				if (numReplaced !== 1) return callback(new Error('Error updating book'));
-				callback(null, newFeature);
+				callback(null, scenario);
 			});
-		});*/
+		});
 	};
 
 	self.removeScenario = function(episodeId, featureId, scenarioId, callback) {
-		setTimeout(function() {
-			callback(null, {});
-		}, 1000);
+		getFeature(episodeId, featureId, function(err, book, feature) {
+			if (err) return callback(err);
+
+			feature.scenarios = _.remove(feature.scenarios, {id: scenarioId});
+
+			db.update({}, book, function(err, numReplaced) {
+				if (err) return callback(err);
+				if (numReplaced !== 1) return callback(new Error('Error updating book'));
+				callback(null);
+			});
+		});
 	};
+
+	//
+	// Private
+	//
+
+	function generateId() {
+		function s4() {
+			return Math.floor((1 + Math.random()) * 0x10000)
+				.toString(16)
+				.substring(1);
+		}
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+			s4() + '-' + s4() + s4() + s4();
+	}
+
+	function getEpisode(episodeId, callback) {
+		db.findOne({}, function(err, book) {
+			if (err) return callback(err);
+			if (!book)  return callback(new Error('Book not found'));
+
+			var episode = _.find(book.episodes, {id: episodeId});
+			if (!episode) return callback(new Error('Episode not found'));
+
+			callback(null, book, episode);
+		});
+	}
+
+	function getFeature(episodeId, featureId, callback) {
+		getEpisode(episodeId, function(err, book, episode) {
+			if (err) return callback(err);
+
+			var feature = _.find(episode.features, {id: featureId});
+			if (!feature) return callback(new Error('Feature not found'));
+
+			callback(null, book, feature);
+		});
+	}
 
 }, iris.path.resource.book.js);

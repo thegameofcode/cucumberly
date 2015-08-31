@@ -2,21 +2,23 @@ iris.ui(function (self) {
 	"use strict";
 
 	var book = iris.resource(iris.path.resource.book.js);
+	var episodeId;
+	var featureId;
 
 	self.create = function() {
 		self.tmpl(iris.path.screen.feature.html);
 
 		self.get('btnAddScenario').on('click', addScenario);
 
-		self.ui('featureName', iris.path.ui.editableLabel.js, {defaultText: 'New feature'});
-		self.ui('featureMotivation', iris.path.ui.editableLabel.js, {defaultText: 'Motivation'});
-		self.ui('featureBeneficiary', iris.path.ui.editableLabel.js, {defaultText: 'Beneficiary'});
-		self.ui('featureExpectedBehaviour', iris.path.ui.editableLabel.js, {defaultText: 'Expected behaviour'});
+		self.ui('featureName', iris.path.ui.editableLabel.js, {defaultText: 'New feature'}).on('change', onFeatureChange);
+		self.ui('featureMotivation', iris.path.ui.editableLabel.js, {defaultText: 'Motivation'}).on('change', onFeatureChange);
+		self.ui('featureBeneficiary', iris.path.ui.editableLabel.js, {defaultText: 'Beneficiary'}).on('change', onFeatureChange);
+		self.ui('featureExpectedBehaviour', iris.path.ui.editableLabel.js, {defaultText: 'Expected behaviour'}).on('change', onFeatureChange);
 	};
 
 	self.awake = function() {
-		var episodeId = self.param('episodeId');
-		var featureId = self.param('featureId');
+		episodeId = self.param('episodeId');
+		featureId = self.param('featureId');
 		iris.log('Scenarios Screen params episodeId[' + episodeId + '] featureId[' + featureId + ']');
 
 		if (featureId && episodeId) {
@@ -38,20 +40,39 @@ iris.ui(function (self) {
 	}
 
 	function setScenarios(scenarioList) {
+		self.destroyUIs('scenarios');
+
 		if (!scenarioList || scenarioList.length === 0) {
 			return;
 		}
 
-		self.destroyUIs('scenarios');
 		scenarioList.forEach(function(scenario) {
-			self.ui('scenarios', iris.path.ui.scenario.js, {scenario: scenario}, self.APPEND);
+			self.ui('scenarios', iris.path.ui.scenario.js, {episodeId: episodeId, featureId: featureId, scenario: scenario}, self.APPEND);
 		});
 	}
 
 	function addScenario() {
-		var scenario = {name: 'New scenario', steps: {given: [''], when: [''], then: ['']}};
-		self.ui('scenarios', iris.path.ui.scenario.js, {scenario: scenario}, self.APPEND);
-		$("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+		var scenarioDefault = {name: 'New scenario', steps: {given: [''], when: [''], then: ['']}};
+		book.createScenario(episodeId, featureId, scenarioDefault, function(err, scenario) {
+			self.ui('scenarios', iris.path.ui.scenario.js, {episodeId: episodeId, featureId: featureId, scenario: scenario}, self.APPEND);
+			$("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
+		});
+	}
+
+	function onFeatureChange() {
+		var data = {
+			name: self.ui('featureName').text(),
+			description: {
+				motivation: self.ui('featureMotivation').text(),
+				beneficiary: self.ui('featureBeneficiary').text(),
+				expectedBehaviour: self.ui('featureExpectedBehaviour').text()
+			}
+		};
+
+		book.updateFeature(episodeId, featureId, data, function(err) {
+			if (err) return console.error(err);
+			console.log('Feature updated');
+		});
 	}
 
 }, iris.path.screen.feature.js);
