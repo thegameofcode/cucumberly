@@ -7,6 +7,7 @@ iris.ui(function (self) {
 		self.tmpl(iris.path.ui.episodeMenu.html);
 
 		self.get('btnAddEpisode').on('click', onAddEpisode);
+		UIBtn.init(self.get());
 	};
 
 	self.setEpisodes = function(episodes) {

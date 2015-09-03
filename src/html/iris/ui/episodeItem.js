@@ -26,6 +26,7 @@ iris.ui(function (self) {
 		self.ui('episodeName').text(self.setting('episode').name);
 
 		self.get('btnAddFeature').on('click', onBtnAddFeatureClick);
+		UIBtn.init(self.get());
 	};
 
 	function onBtnAddFeatureClick() {

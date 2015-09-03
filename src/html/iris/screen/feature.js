@@ -14,6 +14,8 @@ iris.ui(function (self) {
 		self.ui('featureMotivation', iris.path.ui.editableLabel.js, {defaultText: 'Motivation'}).on('change', onFeatureChange);
 		self.ui('featureBeneficiary', iris.path.ui.editableLabel.js, {defaultText: 'Beneficiary'}).on('change', onFeatureChange);
 		self.ui('featureExpectedBehaviour', iris.path.ui.editableLabel.js, {defaultText: 'Expected behaviour'}).on('change', onFeatureChange);
+
+		UIBtn.init(self.get());
 	};
 
 	self.awake = function() {
