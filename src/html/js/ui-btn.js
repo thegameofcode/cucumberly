@@ -5,7 +5,6 @@
   var p = UIBtn.prototype;
 
   p.init = function($ctx) {
-    console.log($ctx)
     this._initInk($ctx);
   };
 
@@ -57,8 +56,7 @@
     var r = rgba[0];
     var g = rgba[1];
     var b = rgba[2];
-    var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
-    return luma;
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
   };
 
   window.UIBtn = new UIBtn();

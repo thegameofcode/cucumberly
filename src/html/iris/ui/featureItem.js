@@ -24,6 +24,7 @@ iris.ui(function (self) {
 
 	function onRemove() {
 		book.removeFeature(self.setting('episode').id, self.setting('feature').id, function(err) {
+			if (err) return alert('Error deleting feature');
 			iris.navigate('#/');
 			self.destroyUI();
 		});

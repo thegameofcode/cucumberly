@@ -33,14 +33,14 @@ iris.ui(function (self) {
 		book.createFeature(self.setting('episode').id, {name: name, description:{motivation: 'Motivation', beneficiary: 'Beneficiary', expectedBehaviour: 'Expected behaviour'}}, function(err, feature) {
 			if (err) return alert(err);
 			var episode = self.setting('episode');
-			addFeatureItem(episode, feature);
-			iris.navigate(featureUrl);
+			addFeatureItem(episode, feature, true);
 		});
 	}
 
-	function addFeatureItem(episode, feature) {
+	function addFeatureItem(episode, feature, navigate) {
 		var featureUrl = '#/episode/' + episode.id + '/feature/' + feature.id;
 		self.ui('listFeatures', iris.path.ui.featureItem.js, {episode: episode, feature: feature, url: featureUrl}, self.APPEND);
+		if (navigate) iris.navigate(featureUrl);
 	}
 
 	function onEpisodeChange() {

@@ -2,6 +2,9 @@ iris.ui(function (self) {
 	"use strict";
 
 	var book = iris.resource(iris.path.resource.book.js);
+	var episodeId;
+	var featureId;
+	var scenarioId;
 
 	self.create = function() {
 		self.tmpl(iris.path.ui.scenario.html);
@@ -12,6 +15,10 @@ iris.ui(function (self) {
 
 		self.get('btnClose').on('click', onBtnCloseClick);
 		self.ui('scenarioName', iris.path.ui.editableLabel.js).on('change', onScenarioNameChange);
+
+		episodeId = self.setting('episodeId');
+		featureId = self.setting('featureId');
+		scenarioId = self.setting('scenario').id;
 
 		loadScenario(self.setting('scenario'));
 		self.get().hide().fadeIn();
@@ -80,9 +87,6 @@ iris.ui(function (self) {
 		self.get('infoSaved').toggleClass('hidden', true);
 		self.get('infoSaving').toggleClass('hidden', false).fadeIn();
 
-		var episodeId = self.setting('episodeId');
-		var featureId = self.setting('featureId');
-		var scenarioId = self.setting('scenario').id;
 		book.updateScenario(episodeId, featureId, scenarioId, data(), function(err, result) {
 			if (err) return alert(err);
 			self.get('infoSaving').toggleClass('hidden', true);
@@ -91,27 +95,29 @@ iris.ui(function (self) {
 	}
 
 	function onBtnCloseClick() {
-		self.get().fadeOut(function () {
-			self.destroyUI();
+		book.removeScenario(episodeId, featureId, scenarioId, function() {
+			self.get().fadeOut(function () {
+				self.destroyUI();
 
-			toastr.clear();
+				/*toastr.clear();
 
-			toastr.options.closeButton = false;
-			toastr.options.progressBar = false;
-			toastr.options.debug = false;
-			toastr.options.positionClass = 'toast-top-full-width';
-			toastr.options.showDuration = 333;
-			toastr.options.hideDuration = 333;
-			toastr.options.timeOut = 0;
-			toastr.options.extendedTimeOut = 1000;
-			toastr.options.showEasing = 'swing';
-			toastr.options.hideEasing = 'swing';
-			toastr.options.showMethod = 'slideDown';
-			toastr.options.hideMethod = 'slideUp';
+				 toastr.options.closeButton = false;
+				 toastr.options.progressBar = false;
+				 toastr.options.debug = false;
+				 toastr.options.positionClass = 'toast-top-full-width';
+				 toastr.options.showDuration = 333;
+				 toastr.options.hideDuration = 333;
+				 toastr.options.timeOut = 0;
+				 toastr.options.extendedTimeOut = 1000;
+				 toastr.options.showEasing = 'swing';
+				 toastr.options.hideEasing = 'swing';
+				 toastr.options.showMethod = 'slideDown';
+				 toastr.options.hideMethod = 'slideUp';
 
-			var message = 'Scenario removed. <button type="button" id="okBtn" class="btn btn-flat btn-success toastr-action">Undo</button>';
+				 var message = 'Scenario removed. <button type="button" id="okBtn" class="btn btn-flat btn-success toastr-action">Undo</button>';
 
-			toastr.info(message, '');
+				 toastr.info(message, '');*/
+			});
 		});
 	}
 

@@ -69,7 +69,7 @@ iris.resource(function (self) {
 			if (err) return callback(err);
 			if (!book)  return callback(new Error('Book not found'));
 
-			book.episodes = _.remove(book.episodes, {id: episodeId});
+			_.remove(book.episodes, {id: episodeId});
 
 			db.update({}, book, function(err, numReplaced) {
 				if (err) return callback(err);
@@ -124,7 +124,7 @@ iris.resource(function (self) {
 		getEpisode(episodeId, function(err, book, episode) {
 			if (err) return callback(err);
 
-			episode.features = _.remove(episode.features, {id: featureId});
+			_.remove(episode.features, {id: featureId});
 
 			db.update({}, book, function(err, numReplaced) {
 				if (err) return callback(err);
@@ -175,7 +175,7 @@ iris.resource(function (self) {
 		getFeature(episodeId, featureId, function(err, book, feature) {
 			if (err) return callback(err);
 
-			feature.scenarios = _.remove(feature.scenarios, {id: scenarioId});
+			_.remove(feature.scenarios, {id: scenarioId});
 
 			db.update({}, book, function(err, numReplaced) {
 				if (err) return callback(err);
