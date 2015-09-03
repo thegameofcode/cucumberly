@@ -27,6 +27,10 @@ iris.path = {
       "html": "ui/episodeMenu.html",
       "js": "ui/episodeMenu.js"
     },
+    "featureItem": {
+      "html": "ui/featureItem.html",
+      "js": "ui/featureItem.js"
+    },
     "scenario": {
       "html": "ui/scenario.html",
       "js": "ui/scenario.js"

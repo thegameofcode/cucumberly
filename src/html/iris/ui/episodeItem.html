@@ -1,5 +1,5 @@
 <div class="card panel">
-	<div class="card-head style-default-light" data-toggle="collapse" data-parent="#episodeAccordion" data-id="accordionItem">
+	<div class="card-head style-default-light collapsed" data-toggle="collapse" data-parent="#episodeAccordion" data-id="accordionItem">
 		<header>
 			<div data-id="episodeName"></div>
 		</header>
@@ -8,9 +8,11 @@
 		</div>
 	</div>
 	<div data-id="accordionBody" class="collapse">
-		<div class="card-body">
-			<ul data-id="listFeatures"></ul>
-			<button data-id="btnAddFeature" type="button" class="btn btn-sm ink-reaction btn-flat btn-default stick-bottom-right">ADD FEATURE</button>
+		<div class="card-body no-padding">
+			<ul class="list" data-id="listFeatures"></ul>
+			<div class="clearfix">
+			<button data-id="btnAddFeature" type="button" class="btn btn-sm ink-reaction btn-flat btn-default">ADD FEATURE</button>
+			</div>
 		</div>
 	</div>
 

@@ -18,8 +18,7 @@ iris.ui(function (self) {
 		if (episode.features && episode.features.length > 0) {
 			episode.features.forEach(function(feature) {
 				iris.log(' -> feature', feature);
-				var $link = $('<a>').text(feature.name).attr('href', '#/episode/' + episode.id + '/feature/' + feature.id);
-				$('<li>').append($link).appendTo(self.get('listFeatures'));
+				addFeatureItem(episode, feature);
 			});
 		}
 
@@ -34,11 +33,14 @@ iris.ui(function (self) {
 		book.createFeature(self.setting('episode').id, {name: name, description:{motivation: 'Motivation', beneficiary: 'Beneficiary', expectedBehaviour: 'Expected behaviour'}}, function(err, feature) {
 			if (err) return alert(err);
 			var episode = self.setting('episode');
-			var featureUrl = '#/episode/' + episode.id + '/feature/' + feature.id;
-			var $link = $('<a>').text(name).attr('href', featureUrl);
-			$('<li>').append($link).appendTo(self.get('listFeatures'));
+			addFeatureItem(episode, feature);
 			iris.navigate(featureUrl);
 		});
+	}
+
+	function addFeatureItem(episode, feature) {
+		var featureUrl = '#/episode/' + episode.id + '/feature/' + feature.id;
+		self.ui('listFeatures', iris.path.ui.featureItem.js, {episode: episode, feature: feature, url: featureUrl}, self.APPEND);
 	}
 
 	function onEpisodeChange() {

@@ -54,13 +54,12 @@ iris.resource(function (self) {
 		getEpisode(episodeId, function(err, book, episode) {
 			if (err) return callback(err);
 
-			var newFeature = {id: generateId(), name: data.name, description: data.description};
-			episode.features.push(newFeature);
+			episode.name = data.name;
 
 			db.update({}, book, function(err, numReplaced) {
 				if (err) return callback(err);
 				if (numReplaced !== 1) return callback(new Error('Error updating book'));
-				callback(null, newFeature);
+				callback(null, episode);
 			});
 		});
 	};

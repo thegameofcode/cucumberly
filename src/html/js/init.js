@@ -43,6 +43,8 @@ iris.locale(
 $(window.document).ready(function () {
 
 	iris.baseUri('iris/');
+
+    iris.events('featureNameChange');
     
     // show the initial screen
     iris.welcome(iris.path.screen.welcome.js);

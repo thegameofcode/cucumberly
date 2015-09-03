@@ -10,7 +10,7 @@ iris.ui(function (self) {
 
 		self.get('btnAddScenario').on('click', addScenario);
 
-		self.ui('featureName', iris.path.ui.editableLabel.js, {defaultText: 'New feature'}).on('change', onFeatureChange);
+		self.ui('featureName', iris.path.ui.editableLabel.js, {defaultText: 'New feature'}).on('change', onFeatureNameChange);
 		self.ui('featureMotivation', iris.path.ui.editableLabel.js, {defaultText: 'Motivation'}).on('change', onFeatureChange);
 		self.ui('featureBeneficiary', iris.path.ui.editableLabel.js, {defaultText: 'Beneficiary'}).on('change', onFeatureChange);
 		self.ui('featureExpectedBehaviour', iris.path.ui.editableLabel.js, {defaultText: 'Expected behaviour'}).on('change', onFeatureChange);
@@ -59,6 +59,11 @@ iris.ui(function (self) {
 			self.ui('scenarios', iris.path.ui.scenario.js, {episodeId: episodeId, featureId: featureId, scenario: scenario}, self.APPEND);
 			$("html, body").animate({ scrollTop: $(document).height()-$(window).height() });
 		});
+	}
+
+	function onFeatureNameChange() {
+		iris.notify('featureNameChange', {featureId: featureId, name: self.ui('featureName').text()});
+		onFeatureChange();
 	}
 
 	function onFeatureChange() {

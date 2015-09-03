@@ -1,10 +1,10 @@
 
 input.editableLabel:hover{
-    background: #d4eafd;
+    background: rgba(0,0,0,0.2);
 }
 
 input.editableLabel:focus{
-    background: #d4eafd;
+    background: rgba(0,0,0,0.2);
 }
 
 .editableLabel {
@@ -15,4 +15,9 @@ input.editableLabel:focus{
 
 .editableLabel.defaultVal {
     border-bottom: 2px dotted #aaa;
+}
+
+
+.featureItem {
+    cursor: pointer;
 }

@@ -11,6 +11,7 @@ iris.ui(function (self) {
 		//UIForm.init(self.get());
 
 		self.get('btnClose').on('click', onBtnCloseClick);
+		self.ui('scenarioName', iris.path.ui.editableLabel.js).on('change', onScenarioNameChange);
 
 		loadScenario(self.setting('scenario'));
 		self.get().hide().fadeIn();
@@ -18,7 +19,7 @@ iris.ui(function (self) {
 
 	function loadScenario(scenario) {
 		iris.log('Load scenario', scenario);
-		self.inflate({scenario: scenario});
+		self.ui('scenarioName').text(scenario.name);
 
 		var stepNames = ['Given', 'When', 'Then'];
 		stepNames.forEach(function(stepName) {
@@ -33,6 +34,10 @@ iris.ui(function (self) {
 		data();
 
 		UIForm.init(self.get()); // position of floating labels TODO move to step UI
+	}
+
+	function onScenarioNameChange() {
+		updateScenario();
 	}
 
 	function onNewStep(stepUi) {
@@ -57,7 +62,7 @@ iris.ui(function (self) {
 	}
 
 	function data() {
-		var result = {steps: {given: [], when: [], then: []}};
+		var result = {name: self.ui('scenarioName').text(), steps: {given: [], when: [], then: []}};
 		var stepUis = self.ui('steps');
 		if (stepUis && stepUis.length > 0) {
 			stepUis.forEach(function(stepUi) {
@@ -68,6 +73,10 @@ iris.ui(function (self) {
 	}
 
 	function onStepChange() {
+		updateScenario();
+	}
+
+	function updateScenario() {
 		self.get('infoSaved').toggleClass('hidden', true);
 		self.get('infoSaving').toggleClass('hidden', false).fadeIn();
 

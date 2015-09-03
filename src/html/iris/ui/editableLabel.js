@@ -21,6 +21,7 @@ iris.ui(function (self) {
 	self.text = function(text) {
 		if (text !== undefined) {
 			self.get().val(text);
+			checkDefaultText();
 			resizeInput();
 		} else {
 			return self.get().val();
@@ -45,14 +46,18 @@ iris.ui(function (self) {
 
 	function onChange() {
 		self.get().val( $.trim(self.get().val()) );
+		checkDefaultText();
+		resizeInput();
+
+		self.notify('change');
+	}
+
+	function checkDefaultText() {
 		var defaultVal = self.get().val() === '' || self.get().val() === self.setting('defaultText');
 		if (defaultVal) {
 			self.get().val(self.setting('defaultText'));
 		}
 		self.get().toggleClass('defaultVal', defaultVal);
-		resizeInput();
-
-		self.notify('change');
 	}
 
 	function resizeInput() {
